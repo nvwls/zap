@@ -18,10 +18,8 @@
 # limitations under the License.
 #
 
-actions :run
-default_action :run
+actions :delay, :run
+default_action :delay
 
 attribute :directory, :kind_of => String, :name_attribute => true
 attribute :pattern, :kind_of => String, :default => "*"
-
-attr_accessor :delayed

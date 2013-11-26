@@ -18,17 +18,17 @@
 # limitations under the License.
 #
 
-def action_run
-  unless @new_resource.delayed
-    r = @new_resource.dup
-    r.delayed = true
-    @run_context.resource_collection << r
-    return
-  end
+def action_delay
+  r = @new_resource.dup
+  r.action(:run)
+  @run_context.resource_collection << r
+end
 
+
+def action_run
   all = ::Dir.glob("#{@new_resource.name}/#{@new_resource.pattern}")
-  return if all.empty?
   Chef::Log.debug "Found #{all.inspect}"
+  return if all.empty?
 
   @run_context.resource_collection.each do |r|
     if r.kind_of?(Chef::Resource::File) or r.kind_of?(Chef::Resource::Template)
