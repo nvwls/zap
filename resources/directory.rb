@@ -18,9 +18,10 @@
 # limitations under the License.
 #
 
-actions :delete
-
-default_action :delete
+actions :run
+default_action :run
 
 attribute :directory, :kind_of => String, :name_attribute => true
 attribute :pattern, :kind_of => String, :default => "*"
+
+attr_accessor :delayed

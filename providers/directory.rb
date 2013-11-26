@@ -18,7 +18,14 @@
 # limitations under the License.
 #
 
-action :delete do
+def action_run
+  unless @new_resource.delayed
+    r = @new_resource.dup
+    r.delayed = true
+    @run_context.resource_collection << r
+    return
+  end
+
   all = ::Dir.glob("#{@new_resource.name}/#{@new_resource.pattern}")
   return if all.empty?
   Chef::Log.debug "Found #{all.inspect}"

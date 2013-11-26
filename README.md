@@ -1,7 +1,7 @@
 zap
 ===
 
-Library cookbook for building authoritative services
+Library cookbook for building authoritative resource sets.
 
 One of the common pitfalls in chef land is the pattern of one deleting a
 resource definition from a recipe and the user wondering why the resource still
@@ -39,7 +39,7 @@ zap_directory
 
 ## Actions
 
-- **:delete** - Remove files in a directory
+- **:run** - Remove files in a directory
 
 ## Attribute Parameters
 
@@ -47,8 +47,8 @@ zap_directory
 
 ### Examples
 
-###ruby
-
-    zap_directory '/etc/sysctl.d' do
-      pattern '*.conf'
-    end
+```ruby
+zap_directory '/etc/sysctl.d' do
+  pattern '*.conf'
+end
+```
