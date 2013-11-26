@@ -26,7 +26,7 @@ end
 
 
 def action_run
-  all = ::Dir.glob("#{@new_resource.name}/#{@new_resource.pattern}")
+  all = ::Dir.glob(::File.join(@new_resource.name, @new_resource.pattern))
   Chef::Log.debug "Found #{all.inspect}"
   return if all.empty?
 
