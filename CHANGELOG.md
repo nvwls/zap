@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.0.5
+------
+### Improvement
+- Added zap_crontab to zap the specified user's crontab
+
 v0.0.4
 ------
 ### Improvement
