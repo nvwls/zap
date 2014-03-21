@@ -24,7 +24,6 @@ def action_delay
   @run_context.resource_collection << r
 end
 
-
 def action_run
   all = []
 
@@ -32,11 +31,12 @@ def action_run
   cmd.run_command
   cmd.stdout.split("\n").each do |line|
     if line =~ /^\# Chef Name: (.*)/
-      if ::File.fnmatch(@new_resource.pattern, $1)
-        Chef::Log.debug "Found #{$1}"
-        all << $1
+      name = Regexp.last_match(1)
+      if ::File.fnmatch(@new_resource.pattern, name)
+        Chef::Log.debug "Found #{name}"
+        all << name
       else
-        Chef::Log.debug "Skipping #{$1}"
+        Chef::Log.debug "Skipping #{name}"
       end
     end
   end
@@ -46,6 +46,7 @@ def action_run
   @run_context.resource_collection.each do |r|
     if r.kind_of?(Chef::Resource::Cron)
       if all.delete(r.name)
+        #
         Chef::Log.debug "Keeping #{r.name}"
       end
     end
@@ -53,8 +54,8 @@ def action_run
 
   all.each do |path|
     r = Chef::Resource::Cron.new(path, @run_context)
-    r.cookbook_name=(@new_resource.cookbook_name)
-    r.recipe_name=(@new_resource.recipe_name)
+    r.cookbook_name(@new_resource.cookbook_name)
+    r.recipe_name(@new_resource.recipe_name)
     r.action(:delete)
     @run_context.resource_collection << r
   end

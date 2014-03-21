@@ -24,15 +24,15 @@ def action_delay
   @run_context.resource_collection << r
 end
 
-
 def action_run
   all = ::Dir.glob(::File.join(@new_resource.name, @new_resource.pattern))
   Chef::Log.debug "Found #{all.inspect}"
   return if all.empty?
 
   @run_context.resource_collection.each do |r|
-    if r.kind_of?(Chef::Resource::File) or r.kind_of?(Chef::Resource::Template)
+    if r.kind_of?(Chef::Resource::File) || r.kind_of?(Chef::Resource::Template)
       if all.delete(r.name)
+        #
         Chef::Log.debug "Keeping #{r.name}"
       end
     end
@@ -40,8 +40,8 @@ def action_run
 
   all.each do |path|
     r = Chef::Resource::File.new(path, @run_context)
-    r.cookbook_name=(@new_resource.cookbook_name)
-    r.recipe_name=(@new_resource.recipe_name)
+    r.cookbook_name(@new_resource.cookbook_name)
+    r.recipe_name(@new_resource.recipe_name)
     r.action(:delete)
     @run_context.resource_collection << r
   end

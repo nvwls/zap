@@ -1,7 +1,7 @@
-base = "/etc/sysctl.d"
+base = '/etc/sysctl.d'
 
 file "#{base}/foo" do
-  content "foo"
+  content 'foo'
 end
 
 system("touch #{base}/bar")
@@ -14,10 +14,10 @@ end
 
 execute "ls -l #{base}"
 
-cron "test #1" do
-  command "true"
+cron 'test #1' do
+  command 'true'
 end
 
-zap_crontab "root" do
-  pattern "test \#*"
+zap_crontab 'root' do
+  pattern 'test \#*'
 end

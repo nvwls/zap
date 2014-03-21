@@ -21,4 +21,4 @@
 actions :delay, :run
 default_action :delay
 
-attribute :pattern, :kind_of => String, :default => "*"
+attribute :pattern, kind_of: String, default: '*'

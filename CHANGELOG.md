@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.0.6
+------
+### Improvement
+- Cleaned up Rubocop warnings
+
 v0.0.5
 ------
 ### Improvement
