@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 base = '/etc/sysctl.d'
 
 file "#{base}/foo" do

@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.1.0
+------
+### Minor
+- Refactored into an HWRP to allow better code reuse
+
 v0.0.6
 ------
 ### Improvement

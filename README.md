@@ -39,7 +39,7 @@ zap_directory
 
 ## Actions
 
-- **:run** - Remove files in a directory
+- **:delete** - Delete files in a directory
 
 ## Attribute Parameters
 
@@ -50,5 +50,24 @@ zap_directory
 ```ruby
 zap_directory '/etc/sysctl.d' do
   pattern '*.conf'
+end
+```
+
+zap_crontab
+-----------
+
+## Actions
+
+- **:delete** - Delete jobs from a user's crontab
+
+## Attribute Parameters
+
+- **pattern** - Pattern of job names match, i.e. `test \#*`, defaults to `*`
+
+### Examples
+
+```ruby
+zap_crontab 'root' do
+  pattern 'test \#*'
 end
 ```
