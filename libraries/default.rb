@@ -87,14 +87,15 @@ class Chef
       @run_context.resource_collection.each do |r|
         if select(r) && all.delete(r.name)
           #
-          Chef::Log.debug "Keeping #{r.name}"
+          Chef::Log.info "#{@new_resource} keeping #{r}"
         end
       end
 
       all.each do |name|
         if ::File.fnmatch(@match, name)
-          #
-          @run_context.resource_collection << zap(name, act)
+          r = zap(name, act)
+          @run_context.resource_collection << r
+          Chef::Log.info "#{@new_resource} zapping #{r}"
         end
       end
     end

@@ -1,7 +1,7 @@
 # encoding: utf-8
 #
 # Cookbook Name:: zap
-# HWRP:: crontab
+# HWRP:: directory
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
