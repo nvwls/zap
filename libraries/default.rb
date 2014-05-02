@@ -24,12 +24,14 @@ class Chef
   class Resource::Zap < Resource
     attr_writer :pattern
     attr_writer :delayed
+    attr_writer :filter
 
     def initialize(name, run_context = nil)
       super
 
       @delayed = false
       @pattern = '*'
+      @filter  = nil
 
       # Set the resource name and provider
       @resource_name = :zap
@@ -37,11 +39,15 @@ class Chef
 
       # Set default actions and allowed actions
       @action = :delete
-      @allowed_actions.push(:delete)
+      @allowed_actions.push(:delete, :remove)
     end
 
     def pattern(arg = nil)
       set_or_return(:pattern, arg, kind_of: String)
+    end
+
+    def filter(&block)
+      set_or_return(:filter, block, kind_of: Proc)
     end
 
     def delayed(arg = nil)
@@ -63,10 +69,15 @@ class Chef
     def load_current_resource
       @klass = nil
       @match = new_resource.pattern
+      @filter = new_resource.filter
     end
 
     def action_delete
       iterate(:delete)
+    end
+
+    def action_remove
+      iterate(:remove)
     end
 
     private
