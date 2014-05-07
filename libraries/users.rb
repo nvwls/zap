@@ -34,17 +34,12 @@ class Chef
       @action = :remove
       @resource_name = :zap_users
       @provider = Provider::ZapUsers
+      @klass = Chef::Resource::User
     end
   end
 
   # provider
   class Provider::ZapUsers < Provider::Zap
-    def load_current_resource
-      super
-      @klass = Chef::Resource::User
-      @name = new_resource.name
-    end
-
     def collect
       all = []
 
@@ -64,10 +59,5 @@ class Chef
 
       all
     end
-
-    def select(r)
-      r.kind_of?(Chef::Resource::User)
-    end
   end
 end
-

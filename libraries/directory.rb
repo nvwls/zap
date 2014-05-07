@@ -32,23 +32,14 @@ class Chef
       # Set the resource name and provider
       @resource_name = :zap_directory
       @provider = Provider::ZapDirectory
+      @klass = [Chef::Resource::File, Chef::Resource::Template]
     end
   end
 
   # provider
   class Provider::ZapDirectory < Provider::Zap
-    def load_current_resource
-      super
-      @klass = Chef::Resource::File
-    end
-
     def collect
       ::Dir.glob(::File.join(@new_resource.name, @new_resource.pattern))
-    end
-
-    def select(r)
-      r.kind_of?(Chef::Resource::File) || r.kind_of?(Chef::Resource::Template)
-      # TODO: check for creates
     end
   end
 end

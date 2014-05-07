@@ -2,6 +2,14 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.4.0
+------
+### Improvement
+- Added klass keyword to DSL which can take a class,
+  i.e. Chef::Resource::File, or string,
+  i.e. 'Chef::Resource::YumRepository', or an array of classes or
+  strings.
+
 v0.3.0
 ------
 ### Improvement

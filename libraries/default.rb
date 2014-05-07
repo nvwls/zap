@@ -25,6 +25,7 @@ class Chef
     attr_writer :pattern
     attr_writer :delayed
     attr_writer :filter
+    attr_writer :klass
 
     def initialize(name, run_context = nil)
       super
@@ -60,14 +61,17 @@ class Chef
       end
       @delayed
     end
+
+    def klass(arg = nil)
+      set_or_return(:klass, arg, kind_of: [Array, Class, String])
+    end
   end
 
   # provider
   class Provider::Zap < Provider
-    attr_writer :delay
-
     def load_current_resource
-      @klass = nil
+      @name  = new_resource.name
+      @klass = [new_resource.klass].flatten
       @match = new_resource.pattern
       @filter = new_resource.filter
     end
@@ -87,7 +91,7 @@ class Chef
     end
 
     def select(r)
-      r.kind_of?(@klass)
+      @klass.include?(r.class) || @klass.include?(r.class.to_s)
     end
 
     # rubocop:disable MethodLength
@@ -113,7 +117,7 @@ class Chef
     # rubocop:enable MethodLength
 
     def zap(name, act)
-      r = @klass.new(name, @run_context)
+      r = @klass.first.new(name, @run_context)
       r.cookbook_name = @new_resource.cookbook_name
       r.recipe_name = @new_resource.recipe_name
       r.action(act)

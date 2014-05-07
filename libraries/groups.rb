@@ -33,17 +33,12 @@ class Chef
       @action = :remove
       @resource_name = :zap_groups
       @provider = Provider::ZapGroups
+      @klass = Chef::Resource::Group
     end
   end
 
   # provider
   class Provider::ZapGroups < Provider::Zap
-    def load_current_resource
-      super
-      @klass = Chef::Resource::Group
-      @name = new_resource.name
-    end
-
     def collect
       all = []
 
@@ -61,10 +56,6 @@ class Chef
       end
 
       all
-    end
-
-    def select(r)
-      r.kind_of?(Chef::Resource::Group) 
     end
   end
 end

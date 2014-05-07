@@ -7,6 +7,11 @@ file "#{base}/foo" do
 end
 
 system("touch #{base}/bar")
+
+template "#{base}/bar" do
+  action :nothing
+end
+
 system("touch #{base}/bar.conf")
 
 zap_directory base do

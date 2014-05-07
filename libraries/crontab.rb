@@ -32,16 +32,12 @@ class Chef
       # Set the resource name and provider
       @resource_name = :zap_crontab
       @provider = Provider::ZapCrontab
+      @klass = Chef::Resource::Cron
     end
   end
 
   # provider
   class Provider::ZapCrontab < Provider::Zap
-    def load_current_resource
-      super
-      @klass = Chef::Resource::Cron
-    end
-
     def collect
       all = []
 
