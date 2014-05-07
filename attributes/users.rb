@@ -22,11 +22,78 @@
 
 case node['platform_family']
 when 'debian'
-  default['zap']['users']['keep'] = %w(root daemon bin sys sync games man lp mail news uucp proxy www-data backup list irc gnats nobody libuuid avahi-autoipd messagebus colord usbmux Debian-exim statd avahi pulse speech-dispatcher hplip sshd rtkit saned Debian-gdm)
+  default['zap']['users']['keep'] = %w[
+    root
+    daemon
+    bin
+    sys
+    sync
+    games
+    man
+    lp
+    mail
+    news
+    uucp
+    proxy
+    www-data
+    backup
+    list
+    irc
+    gnats
+    nobody
+    libuuid
+    avahi-autoipd
+    messagebus
+    colord
+    usbmux
+    Debian-exim
+    statd
+    avahi
+    pulse
+    speech-dispatcher
+    hplip
+    sshd
+    rtkit
+    saned
+    Debian-gdm
+  ]
+
 when 'rhel', 'fedora'
-  default['zap']['users']['keep'] = %w(root bin daemon adm lp sync shutdown halt mail uucp operator games gopher ftp nobody vcsa rpc ntp saslauth postfix rpcuser nfsnobody sshd dbus haldaemon)
+  default['zap']['users']['keep'] = %w[
+    root
+    bin
+    daemon
+    adm
+    lp
+    sync
+    shutdown
+    halt
+    mail
+    uucp
+    operator
+    games
+    gopher
+    ftp
+    nobody
+    vcsa
+    rpc
+    ntp
+    saslauth
+    postfix
+    rpcuser
+    nfsnobody
+    sshd
+    dbus
+    haldaemon
+  ]
+
 when 'freebsd'
-  default['zap']['users']['keep'] = %w(root)
+  default['zap']['users']['keep'] = %w[
+    root
+  ]
+
 else
-  default['zap']['users']['keep'] = %w(root)
+  default['zap']['users']['keep'] = %w[
+    root
+  ]
 end

@@ -22,11 +22,122 @@
 
 case node['platform_family']
 when 'debian'
-  default['zap']['groups']['keep'] = %w(root daemon bin sys adm tty disk lp mail news uucp man proxy kmem dialout fax voice cdrom floppy tape sudo audio dip www-data backup operator list irc src gnats shadow utmp video sasl plugdev staff games users nogroup libuuid crontab vboxsf fuse avahi-autoipd scanner messagebus colord lpadmin ssl-cert bluetooth utempter netdev Debian-exim mlocate ssh avahi pulse pulse-access rtkit saned Debian-gdm)
+  default['zap']['groups']['keep'] = %w[
+    root
+    daemon
+    bin
+    sys
+    adm
+    tty
+    disk
+    lp
+    mail
+    news
+    uucp
+    man
+    proxy
+    kmem
+    dialout
+    fax
+    voice
+    cdrom
+    floppy
+    tape
+    sudo
+    audio
+    dip
+    www-data
+    backup
+    operator
+    list
+    irc
+    src
+    gnats
+    shadow
+    utmp
+    video
+    sasl
+    plugdev
+    staff
+    games
+    users
+    nogroup
+    libuuid
+    crontab
+    vboxsf
+    fuse
+    avahi-autoipd
+    scanner
+    messagebus
+    colord
+    lpadmin
+    ssl-cert
+    bluetooth
+    utempter
+    netdev
+    Debian-exim
+    mlocate
+    ssh
+    avahi
+    pulse
+    pulse-access
+    rtkit
+    saned
+    Debian-gdm
+  ]
+
 when 'rhel', 'fedora'
-  default['zap']['groups']['keep'] = %w(root bin daemon sys adm tty disk lp mem kmem wheel mail uucp man games gopher video dip ftp lock audio nobody users utmp utempter floppy vcsa rpc cdrom tape dialout ntp saslauth postdrop postfix rpcuser nfsnobody sshd slocate haldaemon dbus)
+  default['zap']['groups']['keep'] = %w[
+    root
+    bin
+    daemon
+    sys
+    adm
+    tty
+    disk
+    lp
+    mem
+    kmem
+    wheel
+    mail
+    uucp
+    man
+    games
+    gopher
+    video
+    dip
+    ftp
+    lock
+    audio
+    nobody
+    users
+    utmp
+    utempter
+    floppy
+    vcsa
+    rpc
+    cdrom
+    tape
+    dialout
+    ntp
+    saslauth
+    postdrop
+    postfix
+    rpcuser
+    nfsnobody
+    sshd
+    slocate
+    haldaemon
+    dbus
+  ]
+
 when 'freebsd'
-  default['zap']['groups']['keep'] = %w(root)
+  default['zap']['groups']['keep'] = %w[
+    root
+  ]
+
 else
-  default['zap']['groups']['keep'] = %w(root)
+  default['zap']['groups']['keep'] = %w[
+    root
+  ]
 end
