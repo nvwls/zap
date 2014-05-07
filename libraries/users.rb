@@ -19,11 +19,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# zap_users 'zap_users'
 
 require 'etc'
 require_relative 'default.rb'
 
+# zap_users '/etc/passwd'
 class Chef
   # resource
   class Resource::ZapUsers < Resource::Zap
@@ -51,8 +51,6 @@ class Chef
         u.gid = u.gid.to_i
 
         next if node['zap']['users']['keep'].include?(u.name)
-
-        next if !@filter.nil? && !@filter.call(u)
 
         all << u.name
       end

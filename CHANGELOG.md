@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.4.2
+------
+### Improvement
+- Moved @filter.call into iterate
+
 v0.4.1
 ------
 ### Improvement

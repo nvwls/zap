@@ -32,7 +32,7 @@ class Chef
 
       @delayed = false
       @pattern = '*'
-      @filter  = nil
+      @filter  = proc { |o| true }
 
       # Set the resource name and provider
       @resource_name = :zap
@@ -97,7 +97,8 @@ class Chef
     # rubocop:disable MethodLength
     def iterate(act)
       return unless new_resource.delayed
-      all = collect
+
+      all = collect.select { |o| @filter.call(o) }
 
       @run_context.resource_collection.each do |r|
         if select(r) && all.delete(r.name)

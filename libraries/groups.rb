@@ -23,6 +23,7 @@
 require 'etc'
 require_relative 'default.rb'
 
+# zap_groups '/etc/group'
 class Chef
   # resource
   class Resource::ZapGroups < Resource::Zap
@@ -49,8 +50,6 @@ class Chef
         g.gid = g.gid.to_i
 
         next if node['zap']['groups']['keep'].include?(g.name)
-
-        next if !@filter.nil? && !@filter.call(g)
 
         all << g.name
       end
