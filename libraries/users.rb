@@ -52,7 +52,7 @@ class Chef
 
         next if node['zap']['users']['keep'].include?(u.name)
 
-        all << u.name
+        all << u.name if @filter.call(u)
       end
 
       all

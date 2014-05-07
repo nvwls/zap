@@ -51,7 +51,7 @@ class Chef
 
         next if node['zap']['groups']['keep'].include?(g.name)
 
-        all << g.name
+        all << g.name if @filter.call(g)
       end
 
       all

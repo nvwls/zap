@@ -32,7 +32,6 @@ class Chef
 
       @delayed = false
       @pattern = '*'
-      @filter  = proc { |o| true }
 
       # Set the resource name and provider
       @resource_name = :zap
@@ -73,7 +72,7 @@ class Chef
       @name  = new_resource.name
       @klass = [new_resource.klass].flatten
       @match = new_resource.pattern
-      @filter = new_resource.filter
+      @filter = new_resource.filter || proc { |o| true }
     end
 
     def action_delete
@@ -98,7 +97,7 @@ class Chef
     def iterate(act)
       return unless new_resource.delayed
 
-      all = collect.select { |o| @filter.call(o) }
+      all = collect
 
       @run_context.resource_collection.each do |r|
         if select(r) && all.delete(r.name)
