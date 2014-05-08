@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.5.1
+------
+### Improvement
+- Added recipe[zap::yum_repos_d]
+
 v0.5.0
 ------
 ### Improvement

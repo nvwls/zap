@@ -134,15 +134,11 @@ zap '/etc/sysctl.d' do
   klass [Chef::Resource::File, 'Chef::Resource::Template']
   collect { ::Dir.glob("#{base}/*") }
 end
-
-zap_directory '/etc/yum.repos.d' do
-  select do |r|
-    case r.class.to_s
-    when 'Chef::Resource::File', 'Chef::Resource::Template'
-      r.name
-    when 'Chef::Resource::YumRepository'
-      "/etc/yum.repos.d/#{r.repositoryid}.repo"
-    end
-  end
-end
 ```
+
+Recipes
+=======
+
+## zap::yum_repos_d
+
+Remove yum repository definition files from /etc/yum.repos.d
