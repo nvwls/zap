@@ -26,6 +26,8 @@ class Chef
     attr_writer :delayed
     attr_writer :filter
     attr_writer :klass
+    attr_writer :collect
+    attr_writer :select
 
     def initialize(name, run_context = nil)
       super
@@ -48,6 +50,14 @@ class Chef
 
     def filter(&block)
       set_or_return(:filter, block, kind_of: Proc)
+    end
+
+    def collect(&block)
+      set_or_return(:collect, block, kind_of: Proc)
+    end
+
+    def select(&block)
+      set_or_return(:select, block, kind_of: Proc)
     end
 
     def delayed(arg = nil)
@@ -73,6 +83,8 @@ class Chef
       @klass = [new_resource.klass].flatten
       @match = new_resource.pattern
       @filter = new_resource.filter || proc { |o| true }
+      @collector = new_resource.collect || method(:collect)
+      @selector = new_resource.select || method(:select)
     end
 
     def action_delete
@@ -90,19 +102,19 @@ class Chef
     end
 
     def select(r)
-      @klass.include?(r.class) || @klass.include?(r.class.to_s)
+      r.name if @klass.include?(r.class) || @klass.include?(r.class.to_s)
     end
 
     # rubocop:disable MethodLength
     def iterate(act)
       return unless new_resource.delayed
 
-      all = collect
+      all = @collector.call
 
       @run_context.resource_collection.each do |r|
-        if select(r) && all.delete(r.name)
-          #
-          Chef::Log.info "#{@new_resource} keeping #{r}"
+        name = @selector.call(r)
+        if name && all.delete(name)
+          Chef::Log.info "#{@new_resource} keeping #{name}"
         end
       end
 

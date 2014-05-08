@@ -121,3 +121,28 @@ zap_groups '/etc/group' do
   filter { |g| g.gid > 500 && g.name != 'nrpe' }
 end
 ```
+
+zap
+---
+
+This the base HWRP.
+
+## Example
+
+```ruby
+zap '/etc/sysctl.d' do
+  klass [Chef::Resource::File, 'Chef::Resource::Template']
+  collect { ::Dir.glob("#{base}/*") }
+end
+
+zap_directory '/etc/yum.repos.d' do
+  select do |r|
+    case r.class.to_s
+    when 'Chef::Resource::File', 'Chef::Resource::Template'
+      r.name
+    when 'Chef::Resource::YumRepository'
+      "/etc/yum.repos.d/#{r.repositoryid}.repo"
+    end
+  end
+end
+```
