@@ -63,7 +63,7 @@ class Chef
     def delayed(arg = nil)
       if arg == true
         @delayed = true
-      elsif @delayed == false
+      elsif @delayed == false && immediately == false
         r = dup
         r.delayed(true)
         @run_context.resource_collection << r
@@ -73,6 +73,10 @@ class Chef
 
     def klass(arg = nil)
       set_or_return(:klass, arg, kind_of: [Array, Class, String])
+    end
+
+    def immediately(arg = nil)
+      set_or_return(:immediately, arg, equal_to: [true, false], default: false)
     end
   end
 
@@ -107,7 +111,7 @@ class Chef
 
     # rubocop:disable MethodLength
     def iterate(act)
-      return unless new_resource.delayed
+      return unless new_resource.delayed || new_resource.immediately
 
       all = @collector.call
 
@@ -121,7 +125,11 @@ class Chef
       all.each do |name|
         if ::File.fnmatch(@match, name)
           r = zap(name, act)
-          @run_context.resource_collection << r
+          if new_resource.immediately
+            r.run_action(act)
+          else
+            @run_context.resource_collection << r
+          end
           Chef::Log.info "#{@new_resource} zapping #{r}"
         end
       end
