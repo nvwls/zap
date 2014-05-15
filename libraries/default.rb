@@ -121,7 +121,7 @@ class Chef
       all.each do |name|
         if ::File.fnmatch(@match, name)
           r = zap(name, act)
-          @run_context.resource_collection << r unless r.nil?
+          @run_context.resource_collection << r
           Chef::Log.info "#{@new_resource} zapping #{r}"
         end
       end
@@ -129,7 +129,6 @@ class Chef
     # rubocop:enable MethodLength
 
     def zap(name, act)
-      return nil if @klass.first.nil?
       r = @klass.first.new(name, @run_context)
       r.cookbook_name = @new_resource.cookbook_name
       r.recipe_name = @new_resource.recipe_name

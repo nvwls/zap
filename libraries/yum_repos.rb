@@ -33,18 +33,15 @@ class Chef
       @resource_name = :zap_yum_repos
       @provider = Provider::ZapYumRepos
       @action = :remove
-      begin
-        @klass = Chef::Resource::YumRepository
-      rescue
-        @klass = nil
-        Chef::Log.warn "You are trying to zap a yum repository, but the Yum LWRPs are not loaded! Did you forgot to depend on the yum cookbook somewhere?"
-      end
+      @klass = Chef::Resource::YumRepository rescue nil
+      Chef::Log.warn "You are trying to zap a yum repository, but the Yum LWRPs are not loaded! Did you forgot to depend on the yum cookbook somewhere?" if @klass.nil?
     end
   end
 
   # provider
   class Provider::ZapYumRepos < Provider::Zap
     def collect
+      return [] if @klass.first.nil?
       all = []
 
       # Find all repo files and extract repository names
