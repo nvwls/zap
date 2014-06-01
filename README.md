@@ -31,7 +31,7 @@ resource, those files should be removed.
 
 This pattern has been added to https://github.com/Youscribe/sysctl-cookbook
 
-I presented the zap pattern at ChefConf 2014.  You can check out the
+I presented the zap pattern at ChefConf 2014. You can check out the
 video
 http://www.youtube.com/watch?v=4-So4AJlBI4&list=PL11cZfNdwNyMmx0msapJfuGsLV43C7XsA&feature=share&index=53
 and the slides
@@ -40,7 +40,9 @@ https://speakerdeck.com/nvwls/building-authoritative-resource-sets
 Thanks
 ======
 
-Users and groups support was provide by Sander Botman <sbotman@schubergphilis.com>.
+Users and groups support was provided by Sander Botman <sbotman@schubergphilis.com>.
+Yum_repository support was provided by Sander van Harmelen <svanharmelen@schubergphili.com>
+
 
 Resource/Provider
 =================
@@ -122,6 +124,29 @@ zap_groups '/etc/group' do
 end
 ```
 
+zap_yum_repos
+-------------
+
+If you manage your yum repos using the yum_repository LWRP from the yum cookbook,
+you can use this provider to dynamically delete any unmanaged or obsolete repos.
+
+## Actions
+
+- **:delete** - Delete yum repos using the yum_repository LWRP from the yum cookbook
+
+## Attribute Parameters
+
+- **pattern** - Pattern of repository config files to match, i.e. `*.cust.repo`, defaults to `*.repo`
+- **immediately** - Set to `true` if you want this action to be executed immediately, default to `true`
+
+## Example
+
+```ruby
+zap_yum_repos '/etc/yum.repos.d' do
+  pattern '*.repo'
+end
+```
+
 zap
 ---
 
@@ -135,10 +160,3 @@ zap '/etc/sysctl.d' do
   collect { ::Dir.glob("#{base}/*") }
 end
 ```
-
-Recipes
-=======
-
-## zap::yum_repos_d
-
-Remove yum repository definition files from /etc/yum.repos.d

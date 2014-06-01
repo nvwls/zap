@@ -32,7 +32,8 @@ class Chef
       # Set some default values
       @resource_name = :zap_yum_repos
       @provider = Provider::ZapYumRepos
-      @action = :remove
+      @pattern = '*.repo'
+      @immediately = true
       @klass = Chef::Resource::YumRepository rescue nil
       Chef::Log.warn "You are trying to zap a yum repository, but the Yum LWRPs are not loaded! Did you forgot to depend on the yum cookbook somewhere?" if @klass.nil?
     end
