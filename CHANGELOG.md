@@ -2,6 +2,12 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.5.2
+------
+### Improvement
+- Refactored recipe[zap::yum_repos_d] into the zap_yum_repos resource provider
+- Added an option to call zap immediately at a certain point in your Chef run
+
 v0.5.1
 ------
 ### Improvement
