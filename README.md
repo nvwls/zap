@@ -41,7 +41,7 @@ Thanks
 ======
 
 Users and groups support was provided by Sander Botman <sbotman@schubergphilis.com>.
-Yum_repository support was provided by Sander van Harmelen <svanharmelen@schubergphili.com>
+Yum_repository support was provided by Sander van Harmelen <svanharmelen@schubergphilis.com>
 
 
 Resource/Provider
@@ -137,13 +137,14 @@ you can use this provider to dynamically delete any unmanaged or obsolete repos.
 ## Attribute Parameters
 
 - **pattern** - Pattern of repository config files to match, i.e. `*.cust.repo`, defaults to `*.repo`
-- **immediately** - Set to `true` if you want this action to be executed immediately, default to `true`
+- **immediately** - Set to `true` if you want this action to be executed immediately, defaults to `true`
 
 ## Example
 
 ```ruby
 zap_yum_repos '/etc/yum.repos.d' do
   pattern '*.repo'
+  immediately false
 end
 ```
 
