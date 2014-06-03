@@ -143,7 +143,7 @@ you can use this provider to dynamically delete any unmanaged or obsolete repos.
 
 ```ruby
 zap_yum_repos '/etc/yum.repos.d' do
-  pattern '*.repo'
+  pattern 'epel'
   immediately false
 end
 ```
