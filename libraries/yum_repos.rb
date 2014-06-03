@@ -35,7 +35,7 @@ class Chef
       @pattern = '*.repo'
       @immediately = true
       @klass = Chef::Resource::YumRepository rescue nil
-      Chef::Log.warn "You are trying to zap a yum repository, but the Yum LWRPs are not loaded! Did you forgot to depend on the yum cookbook somewhere?" if @klass.nil?
+      Chef::Log.warn "You are trying to zap a yum repository, but the yum LWRPs are not loaded! Did you forgot to depend on the yum cookbook somewhere?" if @klass.nil?
     end
   end
 
