@@ -32,10 +32,9 @@ class Chef
       # Set some default values
       @resource_name = :zap_yum_repos
       @provider = Provider::ZapYumRepos
-      @pattern = '*.repo'
       @immediately = true
       @klass = Chef::Resource::YumRepository rescue nil
-      Chef::Log.warn "You are trying to zap a yum repository, but the Yum LWRPs are not loaded! Did you forgot to depend on the yum cookbook somewhere?" if @klass.nil?
+      Chef::Log.warn "You are trying to zap a yum repository, but the yum LWRPs are not loaded! Did you forgot to depend on the yum cookbook somewhere?" if @klass.nil?
     end
   end
 
@@ -47,7 +46,7 @@ class Chef
 
       # Find all repo files and extract repository names
       dir = ::File.directory?(@name) ? @name : '/etc/yum.repos.d'
-      ::Dir.glob(::File.join(dir, @new_resource.pattern)).each do |repo|
+      ::Dir.glob(::File.join(dir, "#{@new_resource.pattern}.repo")).each do |repo|
         all << ::File.basename(repo).chomp('.repo')
       end
 
