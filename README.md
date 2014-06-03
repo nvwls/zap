@@ -136,7 +136,7 @@ you can use this provider to dynamically delete any unmanaged or obsolete repos.
 
 ## Attribute Parameters
 
-- **pattern** - Pattern of repository config files to match, i.e. `*.cust.repo`, defaults to `*.repo`
+- **pattern** - Pattern of repository names to match, i.e. `epel` or `update`, defaults to `*`
 - **immediately** - Set to `true` if you want this action to be executed immediately, defaults to `true`
 
 ## Example
