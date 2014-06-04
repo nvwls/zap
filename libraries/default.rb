@@ -83,12 +83,16 @@ class Chef
   # provider
   class Provider::Zap < Provider
     def load_current_resource
-      @name  = new_resource.name
-      @klass = [new_resource.klass].flatten
-      @match = new_resource.pattern
-      @filter = new_resource.filter || proc { |o| true }
-      @collector = new_resource.collect || method(:collect)
-      @selector = new_resource.select || method(:select)
+      @name  = @new_resource.name
+      @klass = [@new_resource.klass].flatten
+      @match = @new_resource.pattern
+      @filter = @new_resource.filter || proc { |o| true }
+      @collector = @new_resource.collect || method(:collect)
+      @selector = @new_resource.select || method(:select)
+    end
+
+    def whyrun_supported?
+      true
     end
 
     def action_delete
@@ -111,26 +115,27 @@ class Chef
 
     # rubocop:disable MethodLength
     def iterate(act)
-      return unless new_resource.delayed || new_resource.immediately
+      return unless @new_resource.delayed || @new_resource.immediately
 
       all = @collector.call
 
       @run_context.resource_collection.each do |r|
         name = @selector.call(r)
         if name && all.delete(name)
-          Chef::Log.info "#{@new_resource} keeping #{name}"
+          Chef::Log.debug "#{@new_resource} keeping #{name}"
         end
       end
 
       all.each do |name|
         if ::File.fnmatch(@match, name)
           r = zap(name, act)
-          if new_resource.immediately
+          if @new_resource.immediately
             r.run_action(act)
           else
             @run_context.resource_collection << r
           end
-          Chef::Log.info "#{@new_resource} zapping #{r}"
+          Chef::Log.debug "#{@new_resource} zapping #{r}"
+          @new_resource.updated_by_last_action(true)
         end
       end
     end
