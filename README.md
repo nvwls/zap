@@ -42,7 +42,7 @@ Thanks
 
 Users and groups support was provided by Sander Botman <sbotman@schubergphilis.com>.
 Yum_repository support was provided by Sander van Harmelen <svanharmelen@schubergphilis.com>
-
+Apt_repository support was provided by Helgi Þormar Þorbjörnsson <helgi@php.net>
 
 Resource/Provider
 =================
@@ -145,6 +145,31 @@ you can use this provider to dynamically delete any unmanaged or obsolete repos.
 zap_yum_repos '/etc/yum.repos.d' do
   pattern 'epel'
   immediately false
+end
+```
+
+zap_apt_repos
+-------------
+
+If you manage your apt repos using the apt_repository LWRP from the apt cookbook,
+you can use this provider to dynamically delete any unmanaged or obsolete repos.
+
+## Actions
+
+- **:remove** - Delete apt repos using the apt_repository LWRP from the apt cookbook
+
+## Attribute Parameters
+
+- **pattern** - Pattern of repository names to match, i.e. `ppa` or `update`, defaults to `*`
+- **immediately** - Set to `true` if you want this action to be executed immediately, defaults to `true`
+
+## Example
+
+```ruby
+zap_apt_repos '/etc/apt/sources.list.d' do
+  pattern 'ppa'
+  immediately false
+  action :remove
 end
 ```
 
