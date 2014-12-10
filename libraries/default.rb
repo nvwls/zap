@@ -81,7 +81,7 @@ class Chef
   end
 
   # provider
-  class Provider::Zap < Provider
+  class Provider::Zap < Provider::LWRPBase
     def load_current_resource
       @name  = @new_resource.name
       @klass = [@new_resource.klass].flatten
