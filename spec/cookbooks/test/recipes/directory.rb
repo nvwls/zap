@@ -2,7 +2,8 @@
 
 file '/etc/profile.d/lang.sh'
 
-file '/etc/profile.d/sub/keep.sh' do
+file 'we want to keep this' do
+  path '/etc/profile.d/sub/keep.sh'
   action :nothing
 end
 

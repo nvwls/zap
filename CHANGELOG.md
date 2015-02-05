@@ -2,6 +2,19 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.8.1
+------
+### Bugfix
+- Added ZapDirectory#select to return `path` instead of the default of `name`.
+
+The following will now be properly recognized:
+
+```ruby
+file 'arbitrary name' do
+  path '/the/real/path'
+end
+```
+
 v0.8.0
 ------
 ### Improvement
