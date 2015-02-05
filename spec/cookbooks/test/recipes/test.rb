@@ -2,6 +2,9 @@
 
 base = '/etc/sysctl.d'
 
+system("mkdir #{base}/sub")
+system("touch #{base}/sub/{one,two}")
+
 file "#{base}/foo" do
   content 'foo'
 end
@@ -19,7 +22,7 @@ zap_directory base do
 #  action	:nothing
 end
 
-execute "ls -l #{base}"
+execute "ls -alR #{base}"
 
 cron 'test #1' do
   command 'true'
@@ -27,4 +30,15 @@ end
 
 zap_crontab 'root' do
   pattern 'test \#*'
+end
+
+system("mkdir -p /test/{a,b,c}")
+system("touch /test/{a,b,c,.}/this.conf")
+
+file '/test/this.conf' do
+  action :nothing
+end
+
+zap_directory '/test' do
+  recursive true
 end

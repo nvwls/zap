@@ -57,6 +57,7 @@ zap_directory
 ## Attribute Parameters
 
 - **pattern** - Pattern of files to match, i.e. `*.conf`, defaults to `*`
+- **recursive** - Recurse into subdirectories, defaults to `false`
 
 ### Examples
 

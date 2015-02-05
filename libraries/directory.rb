@@ -33,13 +33,36 @@ class Chef
       @resource_name = :zap_directory
       @provider = Provider::ZapDirectory
       @klass = [Chef::Resource::File, Chef::Resource::Template]
+      @recursive = false
+    end
+
+    def recursive(arg = nil)
+      set_or_return(:recursive, arg, equal_to: [true, false], default: false)
     end
   end
 
   # provider
   class Provider::ZapDirectory < Provider::Zap
     def collect
-      ::Dir.glob(::File.join(@new_resource.name, @new_resource.pattern))
+      walk(@new_resource.name)
+    end
+
+    private
+    def walk(base)
+      all = []
+      ::Dir.entries(base).each do |name|
+        next if name == '.' || name == '..'
+        path = ::File.join(base, name)
+
+        if ::File.directory?(path)
+          if @new_resource.recursive
+            all.concat walk(path)
+          end
+        elsif ::File.fnmatch(@new_resource.pattern, path)
+          all.push path
+        end
+      end
+      all
     end
   end
 end

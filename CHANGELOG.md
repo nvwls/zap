@@ -2,6 +2,12 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.8.0
+------
+### Improvement
+- Added recursive option to zap_directory to remove all files under the
+  specified directory
+
 v0.5.2
 ------
 ### Improvement
