@@ -39,7 +39,7 @@ describe 'test::directory' do
 
   context '!pattern !recurive' do
     let :runner do
-      ChefSpec::Runner.new(step_into: 'zap_directory') do |node|
+      ChefSpec::SoloRunner.new(step_into: 'zap_directory') do |node|
       end.converge(described_recipe)
     end
 
@@ -56,7 +56,7 @@ describe 'test::directory' do
 
   context 'pattern=*.sh !recursive' do
     let :runner do
-      ChefSpec::Runner.new(step_into: 'zap_directory') do |node|
+      ChefSpec::SoloRunner.new(step_into: 'zap_directory') do |node|
         node.normal['directory']['pattern'] = '*.sh'
       end.converge(described_recipe)
     end
@@ -74,7 +74,7 @@ describe 'test::directory' do
 
   context '!pattern recursive' do
     let :runner do
-      ChefSpec::Runner.new(step_into: 'zap_directory') do |node|
+      ChefSpec::SoloRunner.new(step_into: 'zap_directory') do |node|
         node.normal['directory']['recursive'] = true
       end.converge(described_recipe)
     end
@@ -92,7 +92,7 @@ describe 'test::directory' do
 
   context 'pattern=*.sh recursive' do
     let :runner do
-      ChefSpec::Runner.new(step_into: 'zap_directory') do |node|
+      ChefSpec::SoloRunner.new(step_into: 'zap_directory') do |node|
         node.normal['directory']['pattern'] = '*.sh'
         node.normal['directory']['recursive'] = true
       end.converge(described_recipe)
