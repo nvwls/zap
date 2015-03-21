@@ -174,6 +174,21 @@ zap_apt_repos '/etc/apt/sources.list.d' do
 end
 ```
 
+zap_firewall
+---------
+
+Delete all firewall rules that were not defined in Chef using the firewall cookbook.
+
+## Actions
+
+- **:remove**
+
+## Example
+
+```ruby
+zap_firewall "cleaning up firewall"
+```
+
 zap
 ---
 
