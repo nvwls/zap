@@ -41,7 +41,7 @@ class Chef
       case platform
       when "ubuntu", "debian"
         Chef::Log.warn "Zap does not yet support Ufw"
-      when "redhat", "centos"
+      when "redhat", "centos", "amazon", "scientific"
         if version[0].to_i >= 7
           @provider = Provider::ZapFirewallFirewalld
         else
