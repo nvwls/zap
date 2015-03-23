@@ -49,7 +49,7 @@ class Chef
         next if find(rule)
 
 	      r = zap(rule, act)
-	      r.raw = rule
+        r.raw rule
         if @new_resource.immediately
           r.run_action(act)
         else
