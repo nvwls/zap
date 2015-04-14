@@ -2,6 +2,13 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.8.3
+------
+### Improvement
+- Added recipe [zap::firewall] for support for the firewall cookbook (main caller)
+- Added recipe [zap::firewall_iptables] adds iptables support to zap firewall recipe
+- Added recipe [zap::firewall_firewalld] adds firewalld support to zap firewall recipe
+
 v0.8.2
 ------
 ### Improvement

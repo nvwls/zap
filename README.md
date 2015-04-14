@@ -43,6 +43,7 @@ Thanks
 Users and groups support was provided by Sander Botman <sbotman@schubergphilis.com>.
 Yum_repository support was provided by Sander van Harmelen <svanharmelen@schubergphilis.com>
 Apt_repository support was provided by Helgi Þormar Þorbjörnsson <helgi@php.net>
+firewall support was provided by Ronald Doorn <rdoorn@schubergphilis.com>.
 
 Resource/Provider
 =================
