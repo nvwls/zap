@@ -4,12 +4,12 @@ require 'spec_helper'
 
 describe 'test::directory' do
   before do
-    allow(Dir).to receive(:entries).and_call_original
-    allow(Dir).to receive(:entries)
+    allow(Dir).to receive(:glob).and_call_original
+    allow(Dir).to receive(:glob)
                    .with('/etc/profile.d')
                    .and_return(%w[crap.sh lang.sh lang.csh sub])
 
-    allow(Dir).to receive(:entries)
+    allow(Dir).to receive(:glob)
                    .with('/etc/profile.d/sub')
                    .and_return(%w[foo.sh foo.csh keep.sh])
 

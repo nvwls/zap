@@ -54,7 +54,7 @@ class Chef
     private
     def walk(base)
       all = []
-      ::Dir.entries(base).each do |name|
+      ::Dir.glob(base).each do |name|
         next if name == '.' || name == '..'
         path = ::File.join(base, name)
 
