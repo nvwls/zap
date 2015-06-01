@@ -52,18 +52,22 @@ class Chef
     end
 
     private
+
     def walk(base)
       all = []
-      ::Dir.glob(base).each do |name|
-        next if name == '.' || name == '..'
-        path = ::File.join(base, name)
+      base = base.match('\*') ? ::Dir.glob(base) : [ base ]
+      base.each do |dir|
+        ::Dir.entries(dir).each do |name|
+          next if name == '.' || name == '..'
+          path = ::File.join(dir, name)
 
-        if ::File.directory?(path)
-          if @new_resource.recursive
-            all.concat walk(path)
+          if ::File.directory?(path)
+            if @new_resource.recursive
+              all.concat walk(path)
+            end
+          elsif ::File.fnmatch(@new_resource.pattern, path)
+            all.push path
           end
-        elsif ::File.fnmatch(@new_resource.pattern, path)
-          all.push path
         end
       end
       all
