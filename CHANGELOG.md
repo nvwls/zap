@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.8.4
+------
+### Bugix
+- Support globbed directories, e.g. `/home/*/.ssh`
+
 v0.8.3
 ------
 ### Improvement

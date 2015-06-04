@@ -11,3 +11,5 @@ zap_directory '/etc/profile.d' do
   pattern	node['directory']['pattern']
   recursive	node['directory']['recursive']
 end
+
+zap_directory '/home/*/.ssh'
