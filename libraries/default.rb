@@ -66,7 +66,7 @@ class Chef
       elsif @delayed == false && immediately == false
         r = dup
         r.delayed(true)
-        @run_context.resource_collection << r
+        @run_context.resource_collection.all_resources << r
       end
       @delayed
     end
