@@ -12,4 +12,6 @@ zap_directory '/etc/profile.d' do
   recursive	node['directory']['recursive']
 end
 
-zap_directory '/home/*/.ssh'
+zap_directory "clean up SSH directories" do
+  path '/home/*/.ssh'
+end

@@ -34,10 +34,15 @@ class Chef
       @provider = Provider::ZapDirectory
       @klass = [Chef::Resource::File, Chef::Resource::Template]
       @recursive = false
+      @path = ''
     end
 
     def recursive(arg = nil)
       set_or_return(:recursive, arg, equal_to: [true, false], default: false)
+    end
+
+    def path(arg = nil)
+      set_or_return(:path, arg, kind_of: String, default: '')
     end
   end
 
@@ -48,7 +53,8 @@ class Chef
     end
 
     def collect
-      walk(@new_resource.name)
+      path = !@new_resource.path.empty? ? @new_resource.path : @new_resource.name
+      walk(path)
     end
 
     private
