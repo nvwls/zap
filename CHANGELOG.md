@@ -2,9 +2,16 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.8.5
+------
+### Bugfix
+- Using the shovel operator in chef 12 results in the resource being
+  added directly after the current resource, rather than at the end
+  of the resource list. [joyofhex]
+
 v0.8.4
 ------
-### Bugix
+### Bugfix
 - Support globbed directories, e.g. `/home/*/.ssh`
 
 v0.8.3
