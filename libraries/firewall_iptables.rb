@@ -27,12 +27,13 @@ require_relative 'default.rb'
 class Chef
   # provider
   class Provider::ZapFirewallIptables < Provider::Zap
+    include Chef::Mixin::ShellOut
+
     def collect
       # Collect all set rules
       all = []
 
-      cmd = Mixlib::ShellOut.new("iptables-save")
-      cmd.run_command
+      cmd = shell_out!('iptables-save')
       line_count=0
       ['INPUT', 'OUTPUT', 'FORWARD'].each do |chain|
         line_count = 0
@@ -41,7 +42,7 @@ class Chef
           next if line[0] != '-'
 	        line_count += 1
           all << "#{line_count} #{line.chomp}"
-          Chef::Log.debug("Zap output: #{line_count} #{line.chomp}")
+          Chef::Log.debug("Zap output: found firwall rule #{line_count} '#{line.chomp}'")
         end
       end
 
@@ -72,7 +73,7 @@ class Chef
     end
 
     def find(item)
-      Chef::Log.debug("Starting Zap search for #{item}")
+      Chef::Log.debug("Starting Zap search for firewall rule '#{item}'")
       return unless item
 
       @run_context.resource_collection.each do |r|

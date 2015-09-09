@@ -3,9 +3,9 @@
 # Cookbook Name:: zap
 # HWRP:: firewall
 #
-# Author:: Ronald Doorn <rdoorn@schubergphilis.com>
+# Author:: Sander van Harmelen <svanharmelen@schubergphilis.com>
 #
-# Copyright:: 2015, Ronald Doorn.
+# Copyright:: 2015, Sander van Harmelen.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,16 +26,18 @@ require_relative 'default.rb'
 # zap_firewall
 class Chef
   # provider
-  class Provider::ZapFirewallFirewalld < Provider::Zap
+  class Provider::ZapFirewallWindows < Provider::Zap
     include Chef::Mixin::ShellOut
 
     def collect
       all = []
 
-      cmd = shell_out!('firewall-cmd --direct --get-all-rules')
-      cmd.stdout.split("\n").each do |line|
-        all << line
-        Chef::Log.debug("Zap output: found firwall rule '#{line}'")
+      cmd = shell_out!('netsh advfirewall firewall show rule name=all')
+      cmd.stdout.each_line do |line|
+        if line =~ /^Rule Name:\s+(.*)$/
+          all << $1.chomp
+          Chef::Log.debug("Zap output: found firwall rule '#{$1.chomp}'")
+        end
       end
 
       all
@@ -68,12 +70,9 @@ class Chef
 
       @run_context.resource_collection.each do |r|
         next unless r.resource_name == :firewall_rule
-        p = Chef::Provider::FirewallRuleFirewalld.new(r, @run_context)
-        rule = p.send('build_firewall_rule', p.new_resource.action.first)
-        rule.gsub!(/'/, "'*")
 
-        Chef::Log.debug("matching: [#{item.rstrip}] to [#{rule.rstrip}] => #{item.rstrip == rule.rstrip}")
-        return true if item.rstrip =~ /#{rule.rstrip}/
+        Chef::Log.debug("matching: [#{item}] to [#{r.name}] => #{item == r.name}")
+        return true if item =~ /#{r.name}/
       end
       return false
     end

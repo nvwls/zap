@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.8.7
+------
+### Improvement
+- Added recipe [zap::firewall_windows] adds Windows Firewall support to zap firewall recipe
+
 v0.8.6
 ------
 ### Enhancement
