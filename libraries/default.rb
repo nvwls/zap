@@ -25,7 +25,6 @@ class Chef
     attr_writer :pattern
     attr_writer :delayed
     attr_writer :filter
-    attr_writer :klass
     attr_writer :collect
     attr_writer :select
 
@@ -72,7 +71,18 @@ class Chef
     end
 
     def klass(arg = nil)
-      set_or_return(:klass, arg, kind_of: [Array, Class, String])
+      return @klass if arg.nil?
+      @klass = [arg].flatten.map do |obj|
+        if obj.is_a?(Class)
+          obj
+        else
+          begin
+            obj.split('::').reduce(Module, :const_get)
+          rescue
+            fail "Cannot convert #{obj.inspect} into Class"
+          end
+        end
+      end
     end
 
     def immediately(arg = nil)
@@ -84,7 +94,7 @@ class Chef
   class Provider::Zap < Provider::LWRPBase
     def load_current_resource
       @name  = @new_resource.name
-      @klass = [@new_resource.klass].flatten
+      @klass = @new_resource.klass
       @match = @new_resource.pattern
       @filter = @new_resource.filter || proc { |o| true }
       @collector = @new_resource.collect || method(:collect)

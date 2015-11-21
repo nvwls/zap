@@ -2,6 +2,12 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.9.0
+------
+### Improvement
+- Reworked klass to convert string into class
+- Added recipe [zap::cron_d] to remove /etc/cron.d entries
+
 v0.8.7
 ------
 ### Improvement

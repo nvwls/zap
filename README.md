@@ -203,3 +203,11 @@ zap '/etc/sysctl.d' do
   collect { ::Dir.glob("#{base}/*") }
 end
 ```
+
+Recipes
+=======
+
+zap::cron_d
+-----------
+
+Remove `/etc/cron.d` entries.
