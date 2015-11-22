@@ -2,7 +2,7 @@
 
 base = '/etc/sysctl.d'
 
-system("mkdir #{base}/sub")
+system("mkdir -p #{base}/sub")
 system("touch #{base}/sub/{one,two}")
 
 file "#{base}/foo" do

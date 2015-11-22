@@ -53,7 +53,10 @@ class Chef
     end
 
     def collect
-      path = !@new_resource.path.empty? ? @new_resource.path : @new_resource.name
+      path = @new_resource.name
+      if @new_resource.respond_to?(:path) && !@new_resource.path.empty?
+        path = @new_resource.path
+      end
       walk(path)
     end
 
