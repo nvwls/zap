@@ -151,8 +151,10 @@ class Chef
     end
     # rubocop:enable MethodLength
 
-    def zap(name, act)
-      r = @klass.first.new(name, @run_context)
+    def zap(name, act, klass = nil)
+      klass = @klass.first if klass.nil?
+
+      r = klass.new(name, @run_context)
       r.cookbook_name = @new_resource.cookbook_name
       r.recipe_name = @new_resource.recipe_name
       r.action(act)

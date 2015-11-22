@@ -53,7 +53,7 @@ zap_directory
 
 ## Actions
 
-- **:delete** - Delete files in a directory
+- **:delete** - Delete files and symlinks in a directory
 
 ## Attribute Parameters
 

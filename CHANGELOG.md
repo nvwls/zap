@@ -2,6 +2,17 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.10.0
+------
+### Enhancement
+- Allow klass to be passed into zap()
+- zap_directory will now remove symlinks
+
+v0.9.1
+------
+### Bugfix
+- Internally @klass should be an array
+
 v0.9.0
 ------
 ### Improvement

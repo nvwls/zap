@@ -32,7 +32,7 @@ class Chef
       # Set the resource name and provider
       @resource_name = :zap_directory
       @provider = Provider::ZapDirectory
-      @klass = [Chef::Resource::File, Chef::Resource::Template]
+      @klass = [Chef::Resource::File, Chef::Resource::Template, Chef::Resource::Link]
       @recursive = false
       @path = ''
     end
@@ -77,6 +77,11 @@ class Chef
         end
       end
       all
+    end
+
+    def zap(name, act)
+      klass = Chef::Resource::Link if ::File.symlink?(name)
+      super(name, act, klass)
     end
   end
 end
