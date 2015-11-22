@@ -120,7 +120,7 @@ class Chef
     end
 
     def select(r)
-      r.name if @klass.include?(r.class) || @klass.include?(r.class.to_s)
+      r.name if @klass.include?(r.class)
     end
 
     # rubocop:disable MethodLength

@@ -33,15 +33,17 @@ class Chef
       @resource_name = :zap_apt_repos
       @provider = Provider::ZapAptRepos
       @immediately = true
-      @klass = Chef::Resource::AptRepository rescue nil
-      Chef::Log.warn "You are trying to zap a apt repository, but the apt LWRPs are not loaded! Did you forgot to depend on the apt cookbook somewhere?" if @klass.nil?
+      @klass = [Chef::Resource::AptRepository] rescue []
+      Chef::Log.warn 'You are trying to zap a apt repository, but the apt'\
+                     ' LWRPs are not loaded! Did you forgot to depend on the'\
+                     ' apt cookbook somewhere?' if @klass.empty?
     end
   end
 
   # provider
   class Provider::ZapAptRepos < Provider::Zap
     def collect
-      return [] if @klass.first.nil?
+      return [] if @klass.empty?
       all = []
 
       # Find all repo files and extract repository names

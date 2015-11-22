@@ -49,7 +49,7 @@ class Chef
       all.each do |rule|
         next if find(rule)
 
-	      r = zap(rule, act)
+	r = zap(rule, act)
         r.raw rule
         if @new_resource.immediately
           r.run_action(act)
@@ -57,9 +57,8 @@ class Chef
           @run_context.resource_collection << r
         end
 
-	      @new_resource.updated_by_last_action(true)
+	@new_resource.updated_by_last_action(true)
       end
-
     end
 
     def find(item)
@@ -77,8 +76,6 @@ class Chef
       end
       return false
     end
-
     # rubocop:enable MethodLength
   end
-
 end

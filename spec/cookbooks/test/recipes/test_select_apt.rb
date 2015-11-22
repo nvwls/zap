@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+`mkdir -p /etc/apt/sources.list.d`
+
 zap_directory '/etc/apt/sources.list.d' do
   select do |r|
     case r.class.to_s

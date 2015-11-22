@@ -34,7 +34,7 @@ class Chef
       @action = :remove
       @resource_name = :zap_groups
       @provider = Provider::ZapGroups
-      @klass = Chef::Resource::Group
+      @klass = [Chef::Resource::Group]
     end
   end
 

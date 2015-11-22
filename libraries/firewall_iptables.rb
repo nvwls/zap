@@ -40,7 +40,7 @@ class Chef
         cmd.stdout.lines do |line|
           next if line !~ /#{chain}/
           next if line[0] != '-'
-	        line_count += 1
+	  line_count += 1
           all << "#{line_count} #{line.chomp}"
           Chef::Log.debug("Zap output: found firwall rule #{line_count} '#{line.chomp}'")
         end
@@ -56,10 +56,10 @@ class Chef
 
       all = @collector.call
       all.each do |rule|
-	      native_rule=rule.split(' ').drop(2).join(' ')
+	native_rule=rule.split(' ').drop(2).join(' ')
         next if find(rule)
 
-	      r = zap(native_rule, act)
+	r = zap(native_rule, act)
         r.raw native_rule
         if @new_resource.immediately
           r.run_action(act)
@@ -67,9 +67,8 @@ class Chef
           @run_context.resource_collection << r
         end
 
-	      @new_resource.updated_by_last_action(true)
+	@new_resource.updated_by_last_action(true)
       end
-
     end
 
     def find(item)
@@ -90,8 +89,6 @@ class Chef
       end
       return false
     end
-
     # rubocop:enable MethodLength
   end
-
 end

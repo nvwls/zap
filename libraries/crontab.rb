@@ -32,7 +32,7 @@ class Chef
       # Set the resource name and provider
       @resource_name = :zap_crontab
       @provider = Provider::ZapCrontab
-      @klass = Chef::Resource::Cron
+      @klass = [Chef::Resource::Cron]
     end
   end
 

@@ -1,6 +1,8 @@
 # encoding: utf-8
 
-base = '/etc/sysctl.d'
+base = '/etc/raw.d'
+
+`mkdir -p #{base}`
 
 file "#{base}/foo" do
   content 'foo'

@@ -34,8 +34,10 @@ class Chef
       # Set the resource name and provider and default action
       @action = :remove
       @resource_name = :zap_firewall
-      @klass = Chef::Resource::FirewallRule rescue nil
-      Chef::Log.warn 'You are trying to zap a firewall rule, but the firewall LWRPs are not loaded! Did you forgot to depend on the firewall cookbook somewhere?' if @klass.nil?
+      @klass = [Chef::Resource::FirewallRule] rescue []
+      Chef::Log.warn 'You are trying to zap a firewall rule, but the firewall'\
+                     ' LWRPs are not loaded! Did you forgot to depend on the'\
+                     ' firewall cookbook somewhere?' if @klass.empty?
 
       platform, version = Chef::Platform.find_platform_and_version(run_context.node)
       case platform

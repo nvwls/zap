@@ -49,7 +49,7 @@ class Chef
   # provider
   class Provider::ZapDirectory < Provider::Zap
     def select(r)
-      r.path if @klass.include?(r.class) || @klass.include?(r.class.to_s)
+      r.path if @klass.include?(r.class)
     end
 
     def collect
