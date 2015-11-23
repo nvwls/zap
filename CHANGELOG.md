@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.11.0
+-------
+### Enhancement
+- Reworked to use `converge_by`
+
 v0.10.0
 ------
 ### Enhancement

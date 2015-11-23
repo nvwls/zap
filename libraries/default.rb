@@ -127,27 +127,28 @@ class Chef
     def iterate(act)
       return unless @new_resource.delayed || @new_resource.immediately
 
-      all = @collector.call
+      extraneous = @collector.call
 
       @run_context.resource_collection.each do |r|
         name = @selector.call(r)
-        if name && all.delete(name)
+        if name && extraneous.delete(name)
           Chef::Log.debug "#{@new_resource} keeping #{name}"
         end
       end
 
-      all.each do |name|
-        if ::File.fnmatch(@match, name)
-          r = zap(name, act)
-          if @new_resource.immediately
-            r.run_action(act)
-          else
-            @run_context.resource_collection << r
+      converge_by(@new_resource.to_s) do
+        extraneous.each do |name|
+          if ::File.fnmatch(@match, name)
+            r = zap(name, act)
+            if @new_resource.immediately
+              r.run_action(act)
+            else
+              @run_context.resource_collection << r
+            end
+            Chef::Log.debug "#{@new_resource} zapping #{r}"
           end
-          Chef::Log.debug "#{@new_resource} zapping #{r}"
-          @new_resource.updated_by_last_action(true)
         end
-      end
+      end unless extraneous.empty?
     end
     # rubocop:enable MethodLength
 
