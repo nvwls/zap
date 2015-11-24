@@ -22,12 +22,6 @@
 class Chef
   # resource
   class Resource::Zap < Resource
-    attr_writer :pattern
-    attr_writer :delayed
-    attr_writer :filter
-    attr_writer :collect
-    attr_writer :select
-
     def initialize(name, run_context = nil)
       super
 
@@ -95,7 +89,7 @@ class Chef
     def load_current_resource
       @name  = @new_resource.name
       @klass = @new_resource.klass
-      @match = @new_resource.pattern
+      @pattern = @new_resource.pattern
       @filter = @new_resource.filter || proc { |o| true }
       @collector = @new_resource.collect || method(:collect)
       @selector = @new_resource.select || method(:select)
@@ -127,7 +121,11 @@ class Chef
     def iterate(act)
       return unless @new_resource.delayed || @new_resource.immediately
 
+      # collect all existing resources
       extraneous = @collector.call
+
+      # keep only those that match the specified pattern
+      extraneous.select! { |name| ::File.fnmatch(@pattern, name) }
 
       @run_context.resource_collection.each do |r|
         name = @selector.call(r)
@@ -138,14 +136,12 @@ class Chef
 
       converge_by(@new_resource.to_s) do
         extraneous.each do |name|
-          if ::File.fnmatch(@match, name)
-            r = zap(name, act)
-            if @new_resource.immediately
-              r.run_action(act)
-            else
-              @run_context.resource_collection << r
-            end
-            Chef::Log.debug "#{@new_resource} zapping #{r}"
+          r = zap(name, act)
+          Chef::Log.debug "#{@new_resource} zapping #{r}"
+          if @new_resource.immediately
+            r.run_action(act)
+          else
+            @run_context.resource_collection << r
           end
         end
       end unless extraneous.empty?
