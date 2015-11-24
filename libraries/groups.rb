@@ -33,6 +33,7 @@ class Chef
       # Set the resource name and provider and default action
       @action = :remove
       @resource_name = :zap_groups
+      @supports << :filter
       @provider = Provider::ZapGroups
       @klass = [Chef::Resource::Group]
     end

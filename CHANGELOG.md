@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.11.2
+-------
+### Enhancement
+- Display a warning if a filter is given but the provider does not support it.
+
 v0.11.1
 -------
 ### Bugfix

@@ -25,8 +25,12 @@ class Chef
     def initialize(name, run_context = nil)
       super
 
+      # supported features
+      @supports = []
+
       @delayed = false
       @pattern = '*'
+      @filter = lambda { |_| true }
 
       # Set the resource name and provider
       @resource_name = :zap
@@ -42,6 +46,9 @@ class Chef
     end
 
     def filter(&block)
+      if !block.nil? && !@supports.include?(:filter)
+        Chef::Log.warn "#{@resource_name} does not support filter"
+      end
       set_or_return(:filter, block, kind_of: Proc)
     end
 
@@ -90,7 +97,7 @@ class Chef
       @name  = @new_resource.name
       @klass = @new_resource.klass
       @pattern = @new_resource.pattern
-      @filter = @new_resource.filter || proc { |o| true }
+      @filter = @new_resource.filter
       @collector = @new_resource.collect || method(:collect)
       @selector = @new_resource.select || method(:select)
     end
