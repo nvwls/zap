@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.11.3
+-------
+### Enhancement
+Using stove for upload
+
 v0.11.2
 -------
 ### Enhancement
@@ -18,7 +23,7 @@ v0.11.0
 - Reworked to use `converge_by`
 
 v0.10.0
-------
+-------
 ### Enhancement
 - Allow klass to be passed into zap()
 - zap_directory will now remove symlinks

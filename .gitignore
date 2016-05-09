@@ -20,3 +20,5 @@ doc/
 Berksfile.lock
 Gemfile.lock
 *~
+
+bin/
