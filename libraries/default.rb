@@ -121,7 +121,7 @@ class Chef
     end
 
     def select(r)
-      r.name if @klass.include?(r.class)
+      r.name if @klass.map { |k| class_for_node(k) }.flatten.include?(r.class)
     end
 
     # rubocop:disable MethodLength
@@ -156,12 +156,30 @@ class Chef
 
     def zap(name, act, klass = nil)
       klass = @klass.first if klass.nil?
-
-      r = klass.new(name, @run_context)
+      r = build_resource_from_klass(klass, name, act)
       r.cookbook_name = @new_resource.cookbook_name
       r.recipe_name = @new_resource.recipe_name
-      r.action(act)
       r
+    end
+
+    def build_resource_from_klass(klass, name, action)
+      if klass.respond_to?(:resource_name)
+        build_resource(klass.resource_name, name) do
+          action action
+        end
+      else
+        r = class_for_node(klass).new(name, @run_context)
+        r.action(action)
+        r
+      end
+    end
+
+    def class_for_node(klass)
+      if klass.respond_to?(:resource_name)
+        Chef::Resource.resource_for_node(klass.resource_name, node)
+      else
+        klass
+      end
     end
   end
 end
