@@ -147,9 +147,8 @@ class Chef
           Chef::Log.debug "#{@new_resource} zapping #{r}"
           if @new_resource.immediately
             r.run_action(act)
-          else
-            @run_context.resource_collection << r
           end
+          @run_context.resource_collection << r
         end
       end unless extraneous.empty?
     end
