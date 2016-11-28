@@ -23,6 +23,14 @@
 require 'etc'
 require_relative 'default.rb'
 
+class Chef
+  class Resource
+    class User
+      resource_name :user if respond_to?(:resource_name)
+    end
+  end
+end
+
 # zap_users '/etc/passwd'
 class Chef
   # resource
