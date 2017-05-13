@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # HWRP:: zap
@@ -30,7 +29,7 @@ class Chef
 
       @delayed = false
       @pattern = '*'
-      @filter = lambda { |_| true }
+      @filter = -> { true }
 
       # Set the resource name and provider
       @resource_name = :zap
@@ -80,7 +79,7 @@ class Chef
           begin
             obj.split('::').reduce(Module, :const_get)
           rescue
-            fail "Cannot convert #{obj.inspect} into Class"
+            raise "Cannot convert #{obj.inspect} into Class"
           end
         end
       end
@@ -124,7 +123,6 @@ class Chef
       r.name if @klass.map { |k| class_for_node(k) }.flatten.include?(r.class)
     end
 
-    # rubocop:disable MethodLength
     def iterate(act)
       return unless @new_resource.delayed || @new_resource.immediately
 
@@ -141,14 +139,15 @@ class Chef
         end
       end
 
-      converge_by(@new_resource.to_s) do
+      converge_by(@new_resource.to_s) do # rubocop:disable Style/MultilineIfModifier
         extraneous.each do |name|
           r = zap(name, act)
           Chef::Log.debug "#{@new_resource} zapping #{r}"
           if @new_resource.immediately
             r.run_action(act)
+          else
+            @run_context.resource_collection << r
           end
-          @run_context.resource_collection << r
         end
       end unless extraneous.empty?
     end

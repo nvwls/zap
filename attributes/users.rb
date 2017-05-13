@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # Attributes:: users
@@ -22,7 +21,7 @@
 
 case node['platform_family']
 when 'debian'
-  default['zap']['users']['keep'] = %w[
+  default['zap']['users']['keep'] = %w(
     root
     daemon
     bin
@@ -56,10 +55,10 @@ when 'debian'
     rtkit
     saned
     Debian-gdm
-  ]
+  )
 
 when 'rhel', 'fedora'
-  default['zap']['users']['keep'] = %w[
+  default['zap']['users']['keep'] = %w(
     root
     bin
     daemon
@@ -85,15 +84,15 @@ when 'rhel', 'fedora'
     sshd
     dbus
     haldaemon
-  ]
+  )
 
 when 'freebsd'
-  default['zap']['users']['keep'] = %w[
+  default['zap']['users']['keep'] = %w(
     root
-  ]
+  )
 
 else
-  default['zap']['users']['keep'] = %w[
+  default['zap']['users']['keep'] = %w(
     root
-  ]
+  )
 end

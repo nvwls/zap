@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 user 'moe'
 
 zap_users '/etc/passwd' do

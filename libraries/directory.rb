@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # HWRP:: directory
@@ -64,14 +63,20 @@ class Chef
 
     def walk(base)
       all = []
-      base = base.match('\*') ? ::Dir.glob(base) : [ base ]
-      base.each do |dir|
+
+      dirs = if base =~ /\*/
+               ::Dir.glob(base)
+             else
+               [base]
+             end
+      dirs.each do |dir|
         ::Dir.entries(dir).each do |name|
           next if name == '.' || name == '..'
           path = ::File.join(dir, name)
 
           if ::File.directory?(path)
             if @new_resource.recursive
+              #
               all.concat walk(path)
             end
           elsif ::File.fnmatch(@new_resource.pattern, path)

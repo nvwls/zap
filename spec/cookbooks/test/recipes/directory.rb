@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 file '/etc/profile.d/lang.sh'
 
 file 'we want to keep this' do
@@ -12,6 +10,6 @@ zap_directory '/etc/profile.d' do
   recursive	node['directory']['recursive']
 end
 
-zap_directory "clean up SSH directories" do
+zap_directory 'clean up SSH directories' do
   path '/home/*/.ssh'
 end

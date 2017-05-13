@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # HWRP:: yum_repos
@@ -33,10 +32,14 @@ class Chef
       @resource_name = :zap_yum_repos
       @provider = Provider::ZapYumRepos
       @immediately = true
-      @klass = [Chef::Resource::YumRepository] rescue []
-      Chef::Log.warn 'You are trying to zap a yum repository, but the yum'\
-                     ' LWRPs are not loaded! Did you forgot to depend on the'\
-                     ' yum cookbook somewhere?' if @klass.empty?
+      @klass = begin
+        [Chef::Resource::YumRepository]
+      rescue
+        Chef::Log.warn 'You are trying to zap a yum repository, but the yum'\
+                       ' LWRPs are not loaded! Did you forgot to depend on the'\
+                       ' yum cookbook somewhere?'
+        []
+      end
     end
   end
 

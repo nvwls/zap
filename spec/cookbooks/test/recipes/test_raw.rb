@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 base = '/etc/raw.d'
 
 `mkdir -p #{base}`
@@ -8,13 +6,13 @@ file "#{base}/foo" do
   content 'foo'
 end
 
-system("touch #{base}/bar")
+`touch #{base}/bar`
 
 template "#{base}/bar" do
   action :nothing
 end
 
-system("touch #{base}/bar.conf")
+`touch #{base}/bar.conf`
 
 zap base do
   klass [Chef::Resource::File, 'Chef::Resource::Template']

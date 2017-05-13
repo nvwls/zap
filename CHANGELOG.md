@@ -2,10 +2,14 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.13.0
+### Bugfix
+- Fix rubocop and foodcritic lint
+
 v0.12.0
 ### Improvement
 - added unit tests for zap_users and zap_yum_repos
-- adapt logic to make it compatable with versions 12.14 and higher
+- adapt logic to make it compatible with versions 12.14 and higher
 
 v0.11.4
 -------

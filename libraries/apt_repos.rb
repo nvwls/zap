@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # HWRP:: apt_repos
@@ -33,10 +32,14 @@ class Chef
       @resource_name = :zap_apt_repos
       @provider = Provider::ZapAptRepos
       @immediately = true
-      @klass = [Chef::Resource::AptRepository] rescue []
-      Chef::Log.warn 'You are trying to zap a apt repository, but the apt'\
-                     ' LWRPs are not loaded! Did you forgot to depend on the'\
-                     ' apt cookbook somewhere?' if @klass.empty?
+      @klass = begin
+        [Chef::Resource::AptRepository]
+      rescue
+        Chef::Log.warn 'You are trying to zap a apt repository, but the apt'\
+                       ' LWRPs are not loaded! Did you forgot to depend on the'\
+                       ' apt cookbook somewhere?'
+        []
+      end
     end
   end
 

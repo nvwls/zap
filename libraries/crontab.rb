@@ -1,11 +1,10 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # HWRP:: crontab
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2014, Joseph J. Nuspl Jr.
+# Copyright:: 2014-2017, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

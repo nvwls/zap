@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 `mkdir -p /etc/cron.d`
 `touch /etc/cron.d/a`
 `touch /etc/cron.d/b`

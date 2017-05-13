@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # HWRP:: firewall
@@ -34,13 +33,12 @@ class Chef
       all = []
 
       cmd = shell_out!('iptables-save')
-      line_count=0
-      ['INPUT', 'OUTPUT', 'FORWARD'].each do |chain|
+      %w(INPUT OUTPUT FORWARD).each do |chain|
         line_count = 0
         cmd.stdout.lines do |line|
           next if line !~ /#{chain}/
           next if line[0] != '-'
-	  line_count += 1
+          line_count += 1
           all << "#{line_count} #{line.chomp}"
           Chef::Log.debug("Zap output: found firwall rule #{line_count} '#{line.chomp}'")
         end
@@ -49,17 +47,16 @@ class Chef
       all
     end
 
-    # rubocop:disable MethodLength
     def iterate(act)
       # Detect the rules that we set, and clean up if not found
       return unless @new_resource.delayed || @new_resource.immediately
 
       all = @collector.call
       all.each do |rule|
-	native_rule=rule.split(' ').drop(2).join(' ')
+        native_rule = rule.split(' ').drop(2).join(' ')
         next if find(rule)
 
-	r = zap(native_rule, act)
+        r = zap(native_rule, act)
         r.raw native_rule
         if @new_resource.immediately
           r.run_action(act)
@@ -67,7 +64,7 @@ class Chef
           @run_context.resource_collection << r
         end
 
-	@new_resource.updated_by_last_action(true)
+        @new_resource.updated_by_last_action(true)
       end
     end
 
@@ -81,14 +78,13 @@ class Chef
         rule = p.send('build_firewall_rule', p.new_resource.action.first)
 
         if p.new_resource.position
-           rule.gsub!(/(INPUT|OUTPUT|FORWARD)\s(\d+)/, '\2' + " -A " + '\1')
+          rule.gsub!(/(INPUT|OUTPUT|FORWARD)\s(\d+)/, '\2 -A \1')
         end
 
         Chef::Log.debug("matching: [#{item.rstrip}] to [#{rule.rstrip}] => #{item.rstrip == rule.rstrip}")
         return true if item.rstrip =~ /#{rule.rstrip}/
       end
-      return false
+      false
     end
-    # rubocop:enable MethodLength
   end
 end

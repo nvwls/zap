@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # Attributes:: groups
@@ -22,7 +21,7 @@
 
 case node['platform_family']
 when 'debian'
-  default['zap']['groups']['keep'] = %w[
+  default['zap']['groups']['keep'] = %w(
     root
     daemon
     bin
@@ -84,10 +83,10 @@ when 'debian'
     rtkit
     saned
     Debian-gdm
-  ]
+  )
 
 when 'rhel', 'fedora'
-  default['zap']['groups']['keep'] = %w[
+  default['zap']['groups']['keep'] = %w(
     root
     bin
     daemon
@@ -129,15 +128,15 @@ when 'rhel', 'fedora'
     slocate
     haldaemon
     dbus
-  ]
+  )
 
 when 'freebsd'
-  default['zap']['groups']['keep'] = %w[
+  default['zap']['groups']['keep'] = %w(
     root
-  ]
+  )
 
 else
-  default['zap']['groups']['keep'] = %w[
+  default['zap']['groups']['keep'] = %w(
     root
-  ]
+  )
 end

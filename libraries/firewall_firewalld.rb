@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # HWRP:: firewall
@@ -41,7 +40,6 @@ class Chef
       all
     end
 
-    # rubocop:disable MethodLength
     def iterate(act)
       return unless @new_resource.delayed || @new_resource.immediately
 
@@ -49,7 +47,7 @@ class Chef
       all.each do |rule|
         next if find(rule)
 
-	r = zap(rule, act)
+        r = zap(rule, act)
         r.raw rule
         if @new_resource.immediately
           r.run_action(act)
@@ -57,7 +55,7 @@ class Chef
           @run_context.resource_collection << r
         end
 
-	@new_resource.updated_by_last_action(true)
+        @new_resource.updated_by_last_action(true)
       end
     end
 
@@ -74,8 +72,7 @@ class Chef
         Chef::Log.debug("matching: [#{item.rstrip}] to [#{rule.rstrip}] => #{item.rstrip == rule.rstrip}")
         return true if item.rstrip =~ /#{rule.rstrip}/
       end
-      return false
+      false
     end
-    # rubocop:enable MethodLength
   end
 end

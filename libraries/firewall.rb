@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # HWRP:: firewall
@@ -34,23 +33,25 @@ class Chef
       # Set the resource name and provider and default action
       @action = :remove
       @resource_name = :zap_firewall
-      @klass = [Chef::Resource::FirewallRule] rescue []
-      Chef::Log.warn 'You are trying to zap a firewall rule, but the firewall'\
-                     ' LWRPs are not loaded! Did you forgot to depend on the'\
-                     ' firewall cookbook somewhere?' if @klass.empty?
+      @klass = begin
+        [Chef::Resource::FirewallRule]
+      rescue
+        Chef::Log.warn 'You are trying to zap a firewall rule, but the firewall'\
+                       ' LWRPs are not loaded! Did you forgot to depend on the'\
+                       ' firewall cookbook somewhere?'
+        []
+      end
 
-      platform, version = Chef::Platform.find_platform_and_version(run_context.node)
-      case platform
-      when 'redhat', 'centos', 'amazon', 'scientific'
-        if version.to_i >= 7
-          @provider = Provider::ZapFirewallFirewalld
-        else
-          @provider = Provider::ZapFirewallIptables
-        end
-      when 'ubuntu', 'debian'
-        Chef::Log.warn 'Zap does not yet support Ufw'
+      node = run_context.node
+      case node['platform_family']
+      when 'rhel', 'fedora'
+        @provider = Provider::ZapFirewallFirewalld
+        @provider = Provider::ZapFirewallIptables if node['platform_version'].to_i < 7
       when 'windows'
         @provider = Provider::ZapFirewallWindows
+      else
+        Chef::Log.warn 'zap_firewall does not yet support '\
+                       " #{node['platform']}-#{node['platform_version']}"
       end
     end
   end

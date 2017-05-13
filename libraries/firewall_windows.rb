@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Cookbook Name:: zap
 # HWRP:: firewall
@@ -34,16 +33,15 @@ class Chef
 
       cmd = shell_out!('netsh advfirewall firewall show rule name=all')
       cmd.stdout.each_line do |line|
-        if line =~ /^Rule Name:\s+(.*)$/
-          all << $1.chomp
-          Chef::Log.debug("Zap output: found firwall rule '#{$1.chomp}'")
-        end
+        next if line !~ /^Rule Name:\s+(.*)$/
+        name = Regexp.last_match(1).chomp
+        Chef::Log.debug "Zap output: found firwall rule '#{name}'"
+        all << name
       end
 
       all
     end
 
-    # rubocop:disable MethodLength
     def iterate(act)
       return unless @new_resource.delayed || @new_resource.immediately
 
@@ -51,7 +49,7 @@ class Chef
       all.each do |rule|
         next if find(rule)
 
-	r = zap(rule, act)
+        r = zap(rule, act)
         r.raw rule
         if @new_resource.immediately
           r.run_action(act)
@@ -59,7 +57,7 @@ class Chef
           @run_context.resource_collection << r
         end
 
-	@new_resource.updated_by_last_action(true)
+        @new_resource.updated_by_last_action(true)
       end
     end
 
@@ -73,8 +71,7 @@ class Chef
         Chef::Log.debug("matching: [#{item}] to [#{r.name}] => #{item == r.name}")
         return true if item =~ /#{r.name}/
       end
-      return false
+      false
     end
-    # rubocop:enable MethodLength
   end
 end

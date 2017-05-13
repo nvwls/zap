@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 zap_directory '/etc/yum.repos.d' do
   select do |r|
     case r.class.to_s

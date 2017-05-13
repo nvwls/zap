@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 zap_directory '/etc/conf.d'
 
 `mkdir -p /etc/conf.d`

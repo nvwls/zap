@@ -1,25 +1,23 @@
-# encoding: utf-8
-
 base = '/etc/sysctl.d'
 
-system("mkdir -p #{base}/sub")
-system("touch #{base}/sub/{one,two}")
+`mkdir -p #{base}/sub`
+`touch #{base}/sub/{one,two}`
 
 file "#{base}/foo" do
   content 'foo'
 end
 
-system("touch #{base}/bar")
+`touch #{base}/bar`
 
 template "#{base}/bar" do
   action :nothing
 end
 
-system("touch #{base}/bar.conf")
+`touch #{base}/bar.conf`
 
 zap_directory base do
-#  pattern	"*.conf"
-#  action	:nothing
+  #  pattern	"*.conf"
+  #  action	:nothing
 end
 
 execute "ls -alR #{base}"
@@ -32,8 +30,8 @@ zap_crontab 'root' do
   pattern 'test \#*'
 end
 
-system("mkdir -p /test/{a,b,c}")
-system("touch /test/{a,b,c,.}/this.conf")
+`mkdir -p /test/{a,b,c}`
+`touch /test/{a,b,c,.}/this.conf`
 
 file '/test/this.conf' do
   action :nothing

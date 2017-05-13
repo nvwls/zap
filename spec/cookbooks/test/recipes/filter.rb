@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 base = '/tmp/filter.d'
 
 `mkdir -p #{base}`

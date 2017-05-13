@@ -1,13 +1,11 @@
-# encoding: UTF-8
-
 require 'spec_helper'
 
 describe 'test::yum_repos' do
   before(:each) do
     allow(Dir).to receive(:glob).and_call_original
     allow(Dir).to receive(:glob)
-                   .with('/etc/yum.repos.d/*.repo')
-                   .and_return(%w[/etc/yum.repos.d/os.repo /etc/yum.repos.d/evil.repo])
+      .with('/etc/yum.repos.d/*.repo')
+      .and_return(%w(/etc/yum.repos.d/chef-stable.repo /etc/yum.repos.d/evil.repo))
   end
 
   let(:runner) do
@@ -17,6 +15,6 @@ describe 'test::yum_repos' do
 
   it 'removes unmanaged repos' do
     expect(runner).to     delete_yum_repository('evil')
-    expect(runner).not_to delete_yum_repository('os')
+    expect(runner).not_to delete_yum_repository('chef-stable')
   end
 end

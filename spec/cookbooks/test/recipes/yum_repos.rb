@@ -1,10 +1,7 @@
-# encoding: UTF-8
+zap_yum_repos '/etc/yum.repos.d'
 
-yum_repository 'os' do
-  description 'os'
-  baseurl 'https://www.example.com/repo/os'
-end
-
-zap_yum_repos '/etc/yum.repos.d' do
-  delayed true
+yum_repository 'chef-stable' do
+  description 'Chef Software Inc stable channel'
+  baseurl "https://packages.chef.io/stable-yum/el/#{node['platform_version'].split('.').first}/$basearch"
+  make_cache false
 end

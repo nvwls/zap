@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 `mkdir -p /etc/apt/sources.list.d`
 
 zap_directory '/etc/apt/sources.list.d' do
