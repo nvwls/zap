@@ -21,6 +21,12 @@
 
 require_relative 'default.rb'
 
+if defined?(ChefSpec)
+  def call_zap_crontab(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:zap_crontab, :delete, resource_name)
+  end
+end
+
 # zap_crontab 'USER'
 class Chef
   # resource
@@ -50,6 +56,19 @@ class Chef
       end
 
       all
+    end
+
+    def select(r)
+      r.name if r.resource_name == :cron && r.user == @new_resource.name
+    rescue
+      nil
+    end
+
+    def zap(name, act)
+      klass = Chef::Resource::Cron
+      r = super(name, act, klass)
+      r.user(@new_resource.name)
+      r
     end
   end
 end
