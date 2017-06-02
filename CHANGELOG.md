@@ -2,6 +2,11 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v0.15.0
+### Enhancement
+- Add `force` to force running of `zap` when there is an override_runlist
+  Addresses https://github.com/nvwls/zap/issues/36
+
 v0.14.0
 ### Bugfix
 - Fix issues with zap_crontab and non-root cron

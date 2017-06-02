@@ -24,6 +24,8 @@ class Chef
     def initialize(name, run_context = nil)
       super
 
+      @force = false
+
       # supported features
       @supports = []
 
@@ -38,6 +40,10 @@ class Chef
       # Set default actions and allowed actions
       @action = :delete
       @allowed_actions.push(:delete, :remove)
+    end
+
+    def force(arg = nil)
+      set_or_return(:force, arg, kind_of: [TrueClass, FalseClass])
     end
 
     def pattern(arg = nil)
@@ -124,6 +130,15 @@ class Chef
     end
 
     def iterate(act)
+      unless @run_context.node.override_runlist.empty?
+        if @new_resource.force
+          Chef::Log.warn "Forcing #{@new_resource} during override_runlist"
+        else
+          Chef::Log.warn "Skipping #{@new_resource} during override_runlist"
+          return
+        end
+      end
+
       return unless @new_resource.delayed || @new_resource.immediately
 
       # collect all existing resources
