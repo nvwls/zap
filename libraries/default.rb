@@ -31,7 +31,7 @@ class Chef
 
       @delayed = false
       @pattern = '*'
-      @filter = -> { true }
+      @filter = lambda { |_| true }
 
       # Set the resource name and provider
       @resource_name = :zap
