@@ -2,6 +2,10 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v1.0.1
+### Enhancement
+- Add `zap::sudoers_d` to prune `sudo` resources from /etc/sudoers.d
+
 v1.0.0
 ### Breaking change
 - Rewrote to support custom resources
