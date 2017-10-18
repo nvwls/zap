@@ -151,12 +151,22 @@ Remove extraneous repos from `/etc/apt/sources.list.d`
 zap::cron_d
 -----------
 
-Remove `/etc/cron.d` entries.
+Remove extraneous `/etc/cron.d` entries
+
+zap::init_d
+-----------
+
+Disable sysv-init services on centos-6
 
 zap::iptables_d
-----------------
+---------------
 
 Remove `/etc/iptables.d` entries created by the iptables cookbook
+
+zap::sudoers_d
+--------------
+
+Remove extraneous `/etc/sudoers.d` entries
 
 zap::yum_repos
 --------------

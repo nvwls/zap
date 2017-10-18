@@ -2,6 +2,10 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v1.0.2
+### Enhancement
+- Add `zap::init_d` to disable sysv-init services on centos-6
+
 v1.0.1
 ### Enhancement
 - Add `zap::sudoers_d` to prune `sudo` resources from /etc/sudoers.d

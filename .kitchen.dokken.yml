@@ -94,3 +94,10 @@ suites:
   - name: sudoers_d
     run_list:
     - recipe[test::sudoers_d]
+  - name: init_d
+    run_list:
+    - recipe[test::init_d]
+    includes: [
+      'amazonlinux',
+      'centos-6'
+    ]
