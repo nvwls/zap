@@ -22,11 +22,10 @@
 require 'etc'
 require_relative 'default.rb'
 
-class Chef
-  class Resource
-    class User
-      resource_name :user if respond_to?(:resource_name)
-    end
+if defined?(ChefSpec)
+  def delete_user(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:linux_user, :remove, resource_name) ||
+      ChefSpec::Matchers::ResourceMatcher.new(:user, :remove, resource_name)
   end
 end
 
@@ -41,29 +40,29 @@ class Chef
       @action = :remove
       @resource_name = :zap_users
       @supports << :filter
-      @provider = Provider::ZapUsers
-      @klass = [Chef::Resource::User]
-    end
-  end
 
-  # provider
-  class Provider::ZapUsers < Provider::Zap
-    def collect
-      all = []
+      klass = ::Chef::ResourceResolver.resolve(:user, node: @run_context.node)
+      register klass.new(nil).resource_name
 
-      passwd = ::File.exist?(@name) ? @name : '/etc/passwd'
+      collect do
+        all = []
 
-      IO.foreach(passwd) do |line|
-        u = Struct::Passwd.new(*line.chomp.split(':'))
-        u.uid = u.uid.to_i
-        u.gid = u.gid.to_i
+        IO.foreach(path) do |line|
+          u = Struct::Passwd.new(*line.chomp.split(':'))
+          u.uid = u.uid.to_i
+          u.gid = u.gid.to_i
 
-        next if node['zap']['users']['keep'].include?(u.name)
+          next if node['zap']['users']['keep'].include?(u.name)
 
-        all << u.name if @filter.call(u)
+          all << u.name if @filter.call(u)
+        end
+
+        all
       end
+    end
 
-      all
+    def path(arg = nil)
+      set_or_return(:path, arg, kind_of: String, default: '/etc/passwd')
     end
   end
 end

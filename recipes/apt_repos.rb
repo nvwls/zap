@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: zap
-# Recipe:: cron_d
+# Recipe:: apt_repos
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
@@ -19,15 +19,14 @@
 # limitations under the License.
 #
 
-zap 'cron_d' do
-  register :cron_d do |r|
-    # sanitized_name
-    r.name.tr('.', '-')
-  end
+zap 'apt_repos' do
+  action :remove
+
+  register :apt_repository
 
   collect do
     Dir
-      .glob("/etc/cron.d/#{node['zap']['cron_d']['pattern']}")
-      .map { |path| File.basename(path) }
+      .glob("/etc/apt/sources.list.d/#{node['zap']['apt_repos']['pattern']}.list")
+      .map { |path| File.basename(path, '.list') }
   end
 end

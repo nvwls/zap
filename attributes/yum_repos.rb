@@ -1,10 +1,10 @@
 #
 # Cookbook Name:: zap
-# Recipe:: cron_d
+# Attributes:: yum_repos
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2017, Joseph J. Nuspl Jr.
+# Copyright:: 2014-2017, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,15 +19,4 @@
 # limitations under the License.
 #
 
-zap 'cron_d' do
-  register :cron_d do |r|
-    # sanitized_name
-    r.name.tr('.', '-')
-  end
-
-  collect do
-    Dir
-      .glob("/etc/cron.d/#{node['zap']['cron_d']['pattern']}")
-      .map { |path| File.basename(path) }
-  end
-end
+default['zap']['yum_repos']['pattern'] = '*'

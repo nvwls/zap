@@ -33,28 +33,27 @@ class Chef
       @action = :remove
       @resource_name = :zap_groups
       @supports << :filter
-      @provider = Provider::ZapGroups
-      @klass = [Chef::Resource::Group]
-    end
-  end
 
-  # provider
-  class Provider::ZapGroups < Provider::Zap
-    def collect
-      all = []
+      register :group
 
-      group = ::File.exist?(@name) ? @name : '/etc/group'
+      collect do
+        all = []
 
-      IO.foreach(group) do |line|
-        g = Struct::Group.new(*line.chomp.split(':'))
-        g.gid = g.gid.to_i
+        IO.foreach(path) do |line|
+          g = Struct::Group.new(*line.chomp.split(':'))
+          g.gid = g.gid.to_i
 
-        next if node['zap']['groups']['keep'].include?(g.name)
+          next if node['zap']['groups']['keep'].include?(g.name)
 
-        all << g.name if @filter.call(g)
+          all << g.name if @filter.call(g)
+        end
+
+        all
       end
+    end
 
-      all
+    def path(arg = nil)
+      set_or_return(:path, arg, kind_of: String, default: '/etc/group')
     end
   end
 end

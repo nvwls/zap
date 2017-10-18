@@ -18,19 +18,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+if defined?(ChefSpec)
+  def call_zap_delete(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:zap, :delete, resource_name)
+  end
+
+  def call_zap_remove(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:zap, :remove, resource_name)
+  end
+end
+
 class Chef
-  # resource
+  # rubocop:disable Style/Lambda
   class Resource::Zap < Resource
+    attr_reader :klass
+
     def initialize(name, run_context = nil)
       super
 
-      @force = false
+      # registered resource names
+      @klass = {}
+      @klass.default = lambda { |_| nil }
 
       # supported features
       @supports = []
 
       @delayed = false
-      @pattern = '*'
+
       @filter = lambda { |_| true }
 
       # Set the resource name and provider
@@ -39,15 +54,15 @@ class Chef
 
       # Set default actions and allowed actions
       @action = :delete
-      @allowed_actions.push(:delete, :remove)
+      @allowed_actions.push(:delete, :remove, :disable)
     end
 
     def force(arg = nil)
-      set_or_return(:force, arg, kind_of: [TrueClass, FalseClass])
+      set_or_return(:force, arg, equal_to: [true, false], default: false)
     end
 
     def pattern(arg = nil)
-      set_or_return(:pattern, arg, kind_of: String)
+      set_or_return(:pattern, arg, kind_of: String, default: '*')
     end
 
     def filter(&block)
@@ -61,8 +76,8 @@ class Chef
       set_or_return(:collect, block, kind_of: Proc)
     end
 
-    def select(&block)
-      set_or_return(:select, block, kind_of: Proc)
+    def purge(&block)
+      set_or_return(:purge, block, kind_of: Proc)
     end
 
     def delayed(arg = nil)
@@ -76,18 +91,21 @@ class Chef
       @delayed
     end
 
-    def klass(arg = nil)
-      return @klass if arg.nil?
-      @klass = [arg].flatten.map do |obj|
-        if obj.is_a?(Class)
-          obj
-        else
-          begin
-            obj.split('::').reduce(Module, :const_get)
-          rescue
-            raise "Cannot convert #{obj.inspect} into Class"
-          end
+    def register(*multiple, &cb)
+      multiple.each do |name|
+        block = cb
+
+        if block.nil?
+          obj = Chef::ResourceResolver.resolve(name, node: @run_context.node).new('')
+
+          block = if obj.respond_to?(:path)
+                    lambda { |r| r.path }
+                  else
+                    lambda { |r| r.name }
+                  end
         end
+
+        @klass[name] = block
       end
     end
 
@@ -97,14 +115,14 @@ class Chef
   end
 
   # provider
-  class Provider::Zap < Provider::LWRPBase
+  class Provider::Zap < Provider::LWRPBase # ~FC057
     def load_current_resource
       @name  = @new_resource.name
       @klass = @new_resource.klass
       @pattern = @new_resource.pattern
       @filter = @new_resource.filter
-      @collector = @new_resource.collect || method(:collect)
-      @selector = @new_resource.select || method(:select)
+      @collect = @new_resource.collect || method(:collect)
+      @purge = @new_resource.purge || method(:purge)
     end
 
     def whyrun_supported?
@@ -115,6 +133,10 @@ class Chef
       iterate(:delete)
     end
 
+    def action_disable
+      iterate(:disable)
+    end
+
     def action_remove
       iterate(:remove)
     end
@@ -122,11 +144,22 @@ class Chef
     private
 
     def collect
-      []
+      raise ":collect undefined for #{@new_resource}"
     end
 
-    def select(r)
-      r.name if @klass.map { |k| class_for_node(k) }.flatten.include?(r.class)
+    # collect all existing resources
+    # keep only those that match the specified pattern
+    def existing
+      @collect
+        .call
+        .select { |name| ::File.fnmatch(@pattern, name) }
+    end
+
+    def desired
+      @run_context
+        .resource_collection
+        .map { |r| @klass[r.resource_name].call(r) }
+        .reject(&:nil?)
     end
 
     def iterate(act)
@@ -141,59 +174,26 @@ class Chef
 
       return unless @new_resource.delayed || @new_resource.immediately
 
-      # collect all existing resources
-      extraneous = @collector.call
+      extraneous = existing - desired
+      extraneous.each do |name|
+        r = @purge.call(name, @new_resource)
+        r.cookbook_name = @new_resource.cookbook_name
+        r.recipe_name = @new_resource.recipe_name
 
-      # keep only those that match the specified pattern
-      extraneous.select! { |name| ::File.fnmatch(@pattern, name) }
-
-      @run_context.resource_collection.each do |r|
-        name = @selector.call(r)
-        if name && extraneous.delete(name)
-          Chef::Log.debug "#{@new_resource} keeping #{name}"
+        Chef::Log.debug "#{@new_resource} zapping #{r}"
+        if @new_resource.immediately
+          r.run_action(act)
+        else
+          @run_context.resource_collection << r
         end
       end
-
-      converge_by(@new_resource.to_s) do # rubocop:disable Style/MultilineIfModifier
-        extraneous.each do |name|
-          r = zap(name, act)
-          Chef::Log.debug "#{@new_resource} zapping #{r}"
-          if @new_resource.immediately
-            r.run_action(act)
-          else
-            @run_context.resource_collection << r
-          end
-        end
-      end unless extraneous.empty?
     end
-    # rubocop:enable MethodLength
 
-    def zap(name, act, klass = nil)
-      klass = @klass.first if klass.nil?
-      r = build_resource_from_klass(klass, name, act)
-      r.cookbook_name = @new_resource.cookbook_name
-      r.recipe_name = @new_resource.recipe_name
+    def purge(name, this)
+      klass = ::Chef::ResourceResolver.resolve(@klass.keys.first, node: @run_context.node)
+      r = klass.new(name, @run_context)
+      r.action(this.action)
       r
-    end
-
-    def build_resource_from_klass(klass, name, action)
-      if klass.respond_to?(:resource_name)
-        build_resource(klass.resource_name, name) do
-          action action
-        end
-      else
-        r = class_for_node(klass).new(name, @run_context)
-        r.action(action)
-        r
-      end
-    end
-
-    def class_for_node(klass)
-      if klass.respond_to?(:resource_name)
-        Chef::Resource.resource_for_node(klass.resource_name, node)
-      else
-        klass
-      end
     end
   end
 end

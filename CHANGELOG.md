@@ -2,6 +2,13 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v1.0.0
+### Breaking change
+- Rewrote to support custom resources
+- Remove `zap_firewall` as v2.6.2 of the firewall cookbook manages the ruleset as a whole
+- Remove `zap_apt_repos` in favor of the `zap::apt_repos` recipe
+- Remove `zap_yum_repos` in favor of the `zap::yum_repos` recipe
+
 v0.15.1
 ### Bugfix
 - Fix bug with filter property lamba expression

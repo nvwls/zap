@@ -1,6 +1,8 @@
 #
 # Cookbook Name:: zap
-# Recipe:: cron_d
+# Recipe:: iptables_d
+#
+#      Used in conjunctions with the iptables cookbook, zap iptables_rule files.
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
@@ -19,15 +21,14 @@
 # limitations under the License.
 #
 
-zap 'cron_d' do
-  register :cron_d do |r|
-    # sanitized_name
-    r.name.tr('.', '-')
-  end
+zap 'iptables_d' do
+  action :disable
+
+  register :iptables_rule
 
   collect do
     Dir
-      .glob("/etc/cron.d/#{node['zap']['cron_d']['pattern']}")
+      .glob("/etc/iptables.d/#{node['zap']['iptables_d']['pattern']}")
       .map { |path| File.basename(path) }
   end
 end

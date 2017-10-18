@@ -1,54 +1,48 @@
 require 'spec_helper'
+require_relative '../../libraries/crontab'
 
 describe 'test::cron' do
   before do
-    root = <<EOF
-# Chef Name: larry
-* * * * * true
+    crontab = <<EOF
+# Chef Name: a
+* * * * * echo a
 
-# Chef Name: moe
-* * * * * true
+# Chef Name: b
+* * * * * echo b
 
-# Chef Name: curly
-* * * * * true
-
-# Chef Name: stooges
-* * * * * true
+# Chef Name: c
+* * * * * echo c
 EOF
-    nobody = <<EOF
-# Chef Name: larry
-* * * * * true
-
-# Chef Name: moe
-* * * * * true
-
-# Chef Name: curly
-* * * * * true
-EOF
-    allow(Mixlib::ShellOut).to receive(:new).and_call_original
-    allow(Mixlib::ShellOut).to receive(:new)
+    allow_any_instance_of(Chef::Resource).to receive(:shell_out!)
+      .and_call_original
+    allow_any_instance_of(Chef::Resource).to receive(:shell_out!)
       .with('crontab -l -u root')
-      .and_return(double(run_command: nil, stdout: root))
-    allow(Mixlib::ShellOut).to receive(:new)
+      .and_return(double(stdout: crontab))
+    allow_any_instance_of(Chef::Resource).to receive(:shell_out!)
       .with('crontab -l -u nobody')
-      .and_return(double(run_command: nil, stdout: nobody))
+      .and_return(double(stdout: crontab))
+    allow_any_instance_of(Chef::Resource).to receive(:shell_out!)
+      .with('crontab -l -u daemon')
+      .and_return(double(stdout: ''))
   end
 
-  let :runner do
+  subject do
     ChefSpec::SoloRunner.new(step_into: 'zap_crontab') do |node|
     end.converge(described_recipe)
   end
 
-  it 'converges' do
-    expect(runner).to call_zap_crontab('root')
-    expect(runner).not_to delete_cron('larry').with(user: 'root')
-    expect(runner).to delete_cron('moe').with(user: 'root')
-    expect(runner).not_to delete_cron('curly').with(user: 'root')
-    expect(runner).to delete_cron('stooges').with(user: 'root')
+  it { is_expected.to call_zap_crontab('root') }
+  it { is_expected.not_to delete_cron('a').with(user: 'root') }
+  it { is_expected.to     delete_cron('b').with(user: 'root') }
+  it { is_expected.not_to delete_cron('c').with(user: 'root') }
 
-    expect(runner).to call_zap_crontab('nobody')
-    expect(runner).to delete_cron('larry').with(user: 'nobody')
-    expect(runner).not_to delete_cron('moe').with(user: 'nobody')
-    expect(runner).to delete_cron('curly').with(user: 'nobody')
-  end
+  it { is_expected.to call_zap_crontab('nobody') }
+  it { is_expected.to     delete_cron('a').with(user: 'nobody') }
+  it { is_expected.not_to delete_cron('b').with(user: 'nobody') }
+  it { is_expected.to     delete_cron('c').with(user: 'nobody') }
+
+  it { is_expected.to call_zap_crontab('daemon') }
+  it { is_expected.not_to delete_cron('a').with(user: 'daemon') }
+  it { is_expected.not_to delete_cron('b').with(user: 'daemon') }
+  it { is_expected.not_to delete_cron('c').with(user: 'daemon') }
 end

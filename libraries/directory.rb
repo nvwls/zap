@@ -4,7 +4,7 @@
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2014, Joseph J. Nuspl Jr.
+# Copyright:: 2014-2017, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,9 +31,11 @@ class Chef
       # Set the resource name and provider
       @resource_name = :zap_directory
       @provider = Provider::ZapDirectory
-      @klass = [Chef::Resource::File, Chef::Resource::Template, Chef::Resource::Link]
+
+      register :file, :cookbook_file, :template, :link
+
       @recursive = false
-      @path = ''
+      @path = name
     end
 
     def recursive(arg = nil)
@@ -41,22 +43,14 @@ class Chef
     end
 
     def path(arg = nil)
-      set_or_return(:path, arg, kind_of: String, default: '')
+      set_or_return(:path, arg, kind_of: String)
     end
   end
 
   # provider
   class Provider::ZapDirectory < Provider::Zap
-    def select(r)
-      r.path if @klass.include?(r.class)
-    end
-
     def collect
-      path = @new_resource.name
-      if @new_resource.respond_to?(:path) && !@new_resource.path.empty?
-        path = @new_resource.path
-      end
-      walk(path)
+      walk(@new_resource.path)
     end
 
     private
@@ -87,9 +81,14 @@ class Chef
       all
     end
 
-    def zap(name, act)
-      klass = Chef::Resource::Link if ::File.symlink?(name)
-      super(name, act, klass)
+    def purge(name, _)
+      r = if ::File.symlink?(name)
+            Chef::Resource::Link.new(name, @run_context)
+          else
+            Chef::Resource::File.new(name, @run_context)
+          end
+      r.action(:delete)
+      r
     end
   end
 end

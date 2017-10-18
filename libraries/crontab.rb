@@ -31,44 +31,38 @@ end
 class Chef
   # resource
   class Resource::ZapCrontab < Resource::Zap
+    include Chef::Mixin::ShellOut
+
     def initialize(name, run_context = nil)
       super
 
       # Set the resource name and provider
       @resource_name = :zap_crontab
-      @provider = Provider::ZapCrontab
-      @klass = [Chef::Resource::Cron]
-    end
-  end
 
-  # provider
-  class Provider::ZapCrontab < Provider::Zap
-    def collect
-      all = []
-
-      cmd = Mixlib::ShellOut.new("crontab -l -u #{@new_resource.name}")
-      cmd.run_command
-      cmd.stdout.split("\n").each do |line|
-        if line =~ /^\# Chef Name: (.*)/
-          # Ugly hack!!! Need to follow what the cron provider does
-          all << Regexp.last_match(1)
-        end
+      register :cron do |r|
+        r.name if r.user == @name
       end
 
-      all
-    end
+      collect do
+        all = []
 
-    def select(r)
-      r.name if r.resource_name == :cron && r.user == @new_resource.name
-    rescue
-      nil
-    end
+        cmd = shell_out!("crontab -l -u #{@name}")
+        cmd.stdout.split("\n").each do |line|
+          if line =~ /^\# Chef Name: (.*)/
+            # Ugly hack!!! Need to follow what the cron provider does
+            all << Regexp.last_match(1)
+          end
+        end
 
-    def zap(name, act)
-      klass = Chef::Resource::Cron
-      r = super(name, act, klass)
-      r.user(@new_resource.name)
-      r
+        all
+      end
+
+      purge do |id|
+        r = Chef::Resource::Cron.new(id, @run_context)
+        r.action(:delete)
+        r.user(@name)
+        r
+      end
     end
   end
 end

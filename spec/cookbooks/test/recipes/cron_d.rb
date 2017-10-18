@@ -1,6 +1,10 @@
-`mkdir -p /etc/cron.d`
-`touch /etc/cron.d/a`
-`touch /etc/cron.d/b`
+execute 'test prep' do
+  command <<COMMAND
+mkdir -p /etc/cron.d
+touch /etc/cron.d/a
+touch /etc/cron.d/b
+COMMAND
+end
 
 cron_d 'b' do
   action :nothing

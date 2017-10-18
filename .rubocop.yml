@@ -4,6 +4,7 @@ inherit_gem:
 AllCops:
   Exclude:
     - 'bin/**/*'
+    - 'vendor/**/*'
 
 Metrics/BlockLength:
   Exclude:

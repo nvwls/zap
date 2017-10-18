@@ -43,7 +43,6 @@ Thanks
 Users and groups support was provided by Sander Botman <sbotman@schubergphilis.com>.
 Yum_repository support was provided by Sander van Harmelen <svanharmelen@schubergphilis.com>
 Apt_repository support was provided by Helgi Þormar Þorbjörnsson <helgi@php.net>
-firewall support was provided by Ronald Doorn <rdoorn@schubergphilis.com>.
 
 Resource/Provider
 =================
@@ -122,72 +121,9 @@ keep, i.e. `wheel`.
 
 ```ruby
 zap_groups '/etc/group' do
+  # only zap groups whose gid is greater than 500
   filter { |g| g.gid > 500 && g.name != 'nrpe' }
 end
-```
-
-zap_yum_repos
--------------
-
-If you manage your yum repos using the yum_repository LWRP from the yum cookbook,
-you can use this provider to dynamically delete any unmanaged or obsolete repos.
-
-## Actions
-
-- **:delete** - Delete yum repos using the yum_repository LWRP from the yum cookbook
-
-## Attribute Parameters
-
-- **pattern** - Pattern of repository names to match, i.e. `epel` or `update`, defaults to `*`
-- **immediately** - Set to `true` if you want this action to be executed immediately, defaults to `true`
-
-## Example
-
-```ruby
-zap_yum_repos '/etc/yum.repos.d' do
-  pattern 'epel'
-  immediately false
-end
-```
-
-zap_apt_repos
--------------
-
-If you manage your apt repos using the apt_repository LWRP from the apt cookbook,
-you can use this provider to dynamically delete any unmanaged or obsolete repos.
-
-## Actions
-
-- **:remove** - Delete apt repos using the apt_repository LWRP from the apt cookbook
-
-## Attribute Parameters
-
-- **pattern** - Pattern of repository names to match, i.e. `ppa` or `update`, defaults to `*`
-- **immediately** - Set to `true` if you want this action to be executed immediately, defaults to `true`
-
-## Example
-
-```ruby
-zap_apt_repos '/etc/apt/sources.list.d' do
-  pattern 'ppa'
-  immediately false
-  action :remove
-end
-```
-
-zap_firewall
----------
-
-Delete all firewall rules that were not defined in Chef using the firewall cookbook.
-
-## Actions
-
-- **:remove**
-
-## Example
-
-```ruby
-zap_firewall "cleaning up firewall"
 ```
 
 zap
@@ -199,15 +135,30 @@ This the base HWRP.
 
 ```ruby
 zap '/etc/sysctl.d' do
-  klass [Chef::Resource::File, 'Chef::Resource::Template']
-  collect { ::Dir.glob("#{base}/*") }
+  register :file, :template
+  collect { Dir.glob("#{base}/*") }
 end
 ```
 
 Recipes
 =======
 
+zap::apt_repos
+--------------
+
+Remove extraneous repos from `/etc/apt/sources.list.d`
+
 zap::cron_d
 -----------
 
 Remove `/etc/cron.d` entries.
+
+zap::iptables_d
+----------------
+
+Remove `/etc/iptables.d` entries created by the iptables cookbook
+
+zap::yum_repos
+--------------
+
+Remove extraneous repos from `/etc/yum.repos.d`
