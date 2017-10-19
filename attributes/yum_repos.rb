@@ -20,3 +20,4 @@
 #
 
 default['zap']['yum_repos']['pattern'] = '*'
+default['zap']['yum_repos']['immediately'] = true

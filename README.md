@@ -147,28 +147,36 @@ zap::apt_repos
 --------------
 
 Remove extraneous repos from `/etc/apt/sources.list.d`
+* `node['zap']['apt_repos']['pattern']` is a glob expression used to restrict the name space, defaults to `'*'`
+* `node['zap']['apt_repos']['immediately']` controls whether the zap is run immediately, defaults to `true`
 
 zap::cron_d
 -----------
 
 Remove extraneous `/etc/cron.d` entries
+* `node['zap']['cron_d']['pattern']` is a glob expression used to restrict the name space, defaults to `'*'`
 
 zap::init_d
 -----------
 
 Disable sysv-init services on centos-6
+* `node['zap']['init_d']['pattern']` is a glob expression used to restrict the name space, defaults to `'*'`
 
 zap::iptables_d
 ---------------
 
 Remove `/etc/iptables.d` entries created by the iptables cookbook
+* `node['zap']['iptables_d']['pattern']` is a glob expression used to restrict the name space, defaults to `'*'`
 
 zap::sudoers_d
 --------------
 
 Remove extraneous `/etc/sudoers.d` entries
+* `node['zap']['sudoers_d']['pattern']` is a glob expression used to restrict the name space, defaults to `'*'`
 
 zap::yum_repos
 --------------
 
 Remove extraneous repos from `/etc/yum.repos.d`
+* `node['zap']['yum_repos']['pattern']` is a glob expression used to restrict the name space, defaults to `'*'`
+* `node['zap']['yum_repos']['immediately']` controls whether the zap is run immediately, defaults to `true`

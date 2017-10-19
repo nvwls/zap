@@ -19,8 +19,10 @@
 # limitations under the License.
 #
 
-zap '/etc/yum.repos.d' do
+zap 'yum_repos' do
   register :yum_repository
+
+  immediately node['zap']['yum_repos']['immediately']
 
   collect do
     Dir

@@ -2,6 +2,10 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v1.1.0
+### Minor
+- Add *immediately* support to `zap::apt_repos` and `zap::yum_repos`
+
 v1.0.2
 ### Enhancement
 - Add `zap::init_d` to disable sysv-init services on centos-6

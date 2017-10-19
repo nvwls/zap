@@ -24,6 +24,8 @@ zap 'apt_repos' do
 
   register :apt_repository
 
+  immediately node['zap']['apt_repos']['immediately']
+
   collect do
     Dir
       .glob("/etc/apt/sources.list.d/#{node['zap']['apt_repos']['pattern']}.list")

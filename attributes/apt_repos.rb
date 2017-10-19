@@ -20,3 +20,4 @@
 #
 
 default['zap']['apt_repos']['pattern'] = '*'
+default['zap']['apt_repos']['immediately'] = true
