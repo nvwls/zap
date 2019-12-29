@@ -2,6 +2,10 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v1.2.0
+### Minor
+- Add *filter* support to `zap_directory`
+
 v1.1.0
 ### Minor
 - Add *immediately* support to `zap::apt_repos` and `zap::yum_repos`

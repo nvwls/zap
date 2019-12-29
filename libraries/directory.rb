@@ -31,6 +31,7 @@ class Chef
       # Set the resource name and provider
       @resource_name = :zap_directory
       @provider = Provider::ZapDirectory
+      @supports << :filter
 
       register :file, :cookbook_file, :template, :link
 
@@ -74,7 +75,7 @@ class Chef
               all.concat walk(path)
             end
           elsif ::File.fnmatch(@new_resource.pattern, path)
-            all.push path
+            all.push path if @filter.call(path)
           end
         end
       end
