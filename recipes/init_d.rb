@@ -1,12 +1,12 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
-# Recipe:: iptables_d
-#
-#      Used in conjunctions with the iptables cookbook, zap iptables_rule files.
+# Cookbook:: zap
+# Recipe:: init_d
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2017, Joseph J. Nuspl Jr.
+# Copyright:: 2017-2020, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 #
 
 zap 'init_d' do
-  register :service do |r| # rubocop:disable SymbolProc
+  register :service do |r| # rubocop:disable Style/SymbolProc
     r.service_name
   end
 
@@ -31,18 +31,20 @@ zap 'init_d' do
     cmd = shell_out!('/sbin/chkconfig --list')
     cmd.stdout.split("\n").each do |line|
       next if line !~ /^(\S+)\s+0:(on|off)\s/
+
       svc = Regexp.last_match(1)
       next if line !~ /\s\d:on\s/
       next unless File.fnmatch(node['zap']['init_d']['pattern'], svc)
+
       all << svc
     end
     all
   end
 
   purge do |svc|
-    r = Chef::Resource::Execute.new("Disable #{svc}", @run_context)
-    r.action(:run)
-    r.command("chkconfig --level 0123456 #{svc} off")
-    r
+    build_resource(:execute, "Disable #{svc}") do
+      action :run
+      command "chkconfig --level 0123456 #{svc} off"
+    end
   end
 end

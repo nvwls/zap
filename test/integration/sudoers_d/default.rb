@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe file('/etc/sudoers.d/README') do
   it { should exist }
 end

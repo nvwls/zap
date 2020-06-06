@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
+# Cookbook:: zap
 # Recipe:: cron_d
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2017, Joseph J. Nuspl Jr.
+# Copyright:: 2017-2020, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,8 +28,8 @@ zap 'cron_d' do
   end
 
   collect do
-    Dir
+    ::Dir
       .glob("/etc/cron.d/#{node['zap']['cron_d']['pattern']}")
-      .map { |path| File.basename(path) }
+      .map { |path| ::File.basename(path) }
   end
 end

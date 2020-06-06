@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
+# Cookbook:: zap
 # HWRP:: directory
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2014-2017, Joseph J. Nuspl Jr.
+# Copyright:: 2014-2020, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,77 +21,79 @@
 # limitations under the License.
 #
 
-require_relative 'default.rb'
+require_relative 'default'
 
-# zap_directory 'DIR'
+# chef
 class Chef
   # resource
-  class Resource::ZapDirectory < Resource::Zap
-    def initialize(name, run_context = nil)
-      super
+  class Resource
+    # zap_directory 'DIR'
+    class ZapDirectory < Chef::Resource::Zap
+      provides :zap_directory
 
-      # Set the resource name and provider
-      @resource_name = :zap_directory
-      @provider = Provider::ZapDirectory
-      @supports << :filter
+      property :recursive, [true, false], default: false
+      property :path, String
 
-      register :file, :cookbook_file, :template, :link
+      def initialize(name, run_context = nil)
+        super
 
-      @recursive = false
-      @path = name
-    end
+        # Set the provider
+        @provider = Provider::ZapDirectory
+        @supports << :filter
 
-    def recursive(arg = nil)
-      set_or_return(:recursive, arg, equal_to: [true, false], default: false)
-    end
-
-    def path(arg = nil)
-      set_or_return(:path, arg, kind_of: String)
+        register :file, :cookbook_file, :template, :link
+        @path = name
+      end
     end
   end
 
   # provider
-  class Provider::ZapDirectory < Provider::Zap
-    def collect
-      walk(@new_resource.path)
-    end
+  class Provider
+    # zap_directory
+    class ZapDirectory < Chef::Provider::Zap
+      def collect
+        walk(@new_resource.path)
+      end
 
-    private
+      private
 
-    def walk(base)
-      all = []
+      def walk(base) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+        all = []
 
-      dirs = if base =~ /\*/
-               ::Dir.glob(base)
-             else
-               [base]
-             end
-      dirs.each do |dir|
-        ::Dir.entries(dir).each do |name|
-          next if name == '.' || name == '..'
-          path = ::File.join(dir, name)
+        dirs = if base =~ /\*/
+                 ::Dir.glob(base)
+               else
+                 [base]
+               end
+        dirs.each do |dir|
+          ::Dir.entries(dir).each do |name|
+            next if %w(. ..).include?(name)
 
-          if ::File.directory?(path)
-            if @new_resource.recursive
-              #
-              all.concat walk(path)
+            path = ::File.join(dir, name)
+
+            if ::File.directory?(path)
+              if @new_resource.recursive
+                all.concat walk(path)
+              end
+            elsif ::File.fnmatch(@new_resource.pattern, path)
+              all.push path if @filter.call(path)
             end
-          elsif ::File.fnmatch(@new_resource.pattern, path)
-            all.push path if @filter.call(path)
+          end
+        end
+        all
+      end
+
+      def purge(name, _)
+        if ::File.symlink?(name)
+          build_resource(:link, name) do
+            action :delete
+          end
+        else
+          build_resource(:file, name) do
+            action :delete
           end
         end
       end
-      all
-    end
-
-    def purge(name, _)
-      r = if ::File.symlink?(name)
-            Chef::Resource::Link.new(name, @run_context)
-          else
-            Chef::Resource::File.new(name, @run_context)
-          end
-      r.action(:delete)
-      r
     end
   end
 end

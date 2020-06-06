@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe user('root') do
   it { should exist }
 end

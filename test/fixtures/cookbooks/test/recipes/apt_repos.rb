@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 execute 'test prep' do
-  command <<COMMAND
-cat >/etc/apt/sources.list.d/dummy.list <<EOF
-deb      [trusted=yes] "https://dummy.net/stable-apt" wheezy main
-EOF
-COMMAND
+  command <<-COMMAND
+  cat >/etc/apt/sources.list.d/dummy.list <<-EOF
+  deb      [trusted=yes] "https://dummy.net/stable-apt" wheezy main
+  EOF
+  COMMAND
 end
 
 include_recipe 'zap::apt_repos'

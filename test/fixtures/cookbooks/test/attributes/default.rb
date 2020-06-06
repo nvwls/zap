@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 default['directory']['recursive'] = nil
 default['directory']['pattern'] = nil
 

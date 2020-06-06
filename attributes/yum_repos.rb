@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
+# Cookbook:: zap
 # Attributes:: yum_repos
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2014-2017, Joseph J. Nuspl Jr.
+# Copyright:: 2014-2020, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

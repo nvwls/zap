@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 execute 'test prep' do
-  command <<COMMAND
-mkdir -p /etc/conf.d
-touch /etc/conf.d/a
-ln -nsf /etc/profile.d/.bashrc /etc/conf.d/b
-mkdir -p /etc/conf.d/c
-COMMAND
+  command <<-COMMAND
+  mkdir -p /etc/conf.d
+  touch /etc/conf.d/a
+  ln -nsf /etc/profile.d/.bashrc /etc/conf.d/b
+  mkdir -p /etc/conf.d/c
+  COMMAND
 end
 
 zap_directory '/etc/conf.d'
@@ -19,9 +21,9 @@ link '/etc/conf.d/symlink' do
 end
 
 file '/etc/conf.d/file' do
-  content <<EOF
-export LANG=en_US
-EOF
+  content <<-CONTENT
+  export LANG=en_US
+  CONTENT
 end
 
 cookbook_file '/etc/conf.d/cookbook_file' do

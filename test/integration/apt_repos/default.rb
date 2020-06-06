@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe apt('https://dummy.net/stable-apt') do
   it { should_not exist }
 end

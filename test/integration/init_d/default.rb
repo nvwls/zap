@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe sysv_service('crond') do
   it { should be_enabled }
 end

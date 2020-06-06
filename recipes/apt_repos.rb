@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
+# Cookbook:: zap
 # Recipe:: apt_repos
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2017, Joseph J. Nuspl Jr.
+# Copyright:: 2017-2020, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,8 +29,8 @@ zap 'apt_repos' do
   immediately node['zap']['apt_repos']['immediately']
 
   collect do
-    Dir
+    ::Dir
       .glob("/etc/apt/sources.list.d/#{node['zap']['apt_repos']['pattern']}.list")
-      .map { |path| File.basename(path, '.list') }
+      .map { |path| ::File.basename(path, '.list') }
   end
 end

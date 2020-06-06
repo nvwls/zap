@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe file('/etc/iptables.d/ssh') do
   it { should_not exist }
 end

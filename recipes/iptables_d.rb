@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
+# Cookbook:: zap
 # Recipe:: iptables_d
-#
-#      Used in conjunctions with the iptables cookbook, zap iptables_rule files.
-#
+#<
+# Used in connection with iptables < 5
+#>
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2017, Joseph J. Nuspl Jr.
+# Copyright:: 2017-2020, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,8 +29,8 @@ zap 'iptables_d' do
   register :iptables_rule
 
   collect do
-    Dir
+    ::Dir
       .glob("/etc/iptables.d/#{node['zap']['iptables_d']['pattern']}")
-      .map { |path| File.basename(path) }
+      .map { |path| ::File.basename(path) }
   end
 end

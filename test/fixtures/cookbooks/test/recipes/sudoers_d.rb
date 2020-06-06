@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 node.default['authorization']['sudo']['include_sudoers_d'] = true
 
 include_recipe 'sudo::default'
 
 execute 'test setup' do
-  command <<COMMAND
-touch #{node['authorization']['sudo']['prefix']}/sudoers.d/obsolete
-COMMAND
+  command <<-COMMAND
+  touch /etc/sudoers.d/obsolete
+  COMMAND
 end
 
 include_recipe 'zap::sudoers_d'

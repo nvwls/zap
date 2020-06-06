@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe crontab('root') do
   its('commands') { should include 'echo a' }
   its('commands') { should_not include 'echo b' }

@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 source 'https://supermarket.chef.io'
 
 metadata
 
-cookbook 'test', path: 'spec/cookbooks/test'
+group :integration do
+  cookbook 'test', path: 'test/fixtures/cookbooks/test'
+end

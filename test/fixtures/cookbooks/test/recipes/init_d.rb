@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 execute 'test prep' do
-  command <<COMMAND
-chkconfig postfix on &>/dev/null
-chkconfig --level 4 rsyslog on &>/dev/null
-COMMAND
+  command <<-COMMAND
+  chkconfig postfix on &>/dev/null
+  chkconfig --level 4 rsyslog on &>/dev/null
+  COMMAND
 end
 
 service 'crond' do

@@ -1,10 +1,14 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
+# Cookbook:: zap
 # HWRP:: users
 #
 # Author:: Sander Botman. <sbotman@schubergphilis.com>
+# Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
 # Copyright:: 2014, Sander Botman.
+# Copyright:: 2017-2020, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,50 +23,49 @@
 # limitations under the License.
 #
 
-require 'etc'
-require_relative 'default.rb'
+require_relative 'default'
 
-if defined?(ChefSpec)
-  def delete_user(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:linux_user, :remove, resource_name) ||
-      ChefSpec::Matchers::ResourceMatcher.new(:user, :remove, resource_name)
-  end
-end
-
-# zap_users '/etc/passwd'
+# chef
 class Chef
   # resource
-  class Resource::ZapUsers < Resource::Zap
-    def initialize(name, run_context = nil)
-      super
+  class Resource
+    # zap_users '/etc/passwd'
+    class ZapUsers < Chef::Resource::Zap
+      provides :zap_users
 
-      # Set the resource name and provider and default action
-      @action = :remove
-      @resource_name = :zap_users
-      @supports << :filter
+      property :path, String, default: '/etc/passwd'
 
-      klass = ::Chef::ResourceResolver.resolve(:user, node: @run_context.node)
-      register klass.new(nil).resource_name
+      def initialize(name, run_context = nil)
+        super
 
-      collect do
-        all = []
+        @supports << :filter
 
-        IO.foreach(path) do |line|
-          u = Struct::Passwd.new(*line.chomp.split(':'))
-          u.uid = u.uid.to_i
-          u.gid = u.gid.to_i
-
-          next if node['zap']['users']['keep'].include?(u.name)
-
-          all << u.name if @filter.call(u)
+        register :user, :linux_user do |r| # rubocop:disable Style/SymbolProc
+          r.username
         end
 
-        all
-      end
-    end
+        collect do
+          all = []
 
-    def path(arg = nil)
-      set_or_return(:path, arg, kind_of: String, default: '/etc/passwd')
+          IO.foreach(path) do |line|
+            u = Struct::Passwd.new(*line.chomp.split(':'))
+            u.uid = u.uid.to_i
+            u.gid = u.gid.to_i
+
+            next if node['zap']['users']['keep'].include?(u.name)
+
+            all << u.name if @filter.call(u)
+          end
+
+          all
+        end
+
+        purge do |id|
+          build_resource(:user, id) do
+            action :remove
+          end
+        end
+      end
     end
   end
 end

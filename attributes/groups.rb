@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
+# Cookbook:: zap
 # Attributes:: groups
 #
 # Author:: Sander Botman. <sbotman@schubergphilis.com>
@@ -83,6 +85,8 @@ when 'debian'
     rtkit
     saned
     Debian-gdm
+    systemd-coredump
+    systemd-timesync
   )
 
 when 'rhel', 'fedora'
@@ -128,6 +132,9 @@ when 'rhel', 'fedora'
     slocate
     haldaemon
     dbus
+    render
+    systemd-coredump
+    systemd-timesync
   )
 
 when 'freebsd'

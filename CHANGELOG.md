@@ -2,6 +2,10 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v2.0.0
+### Major
+- Complete overhaul of code
+
 v1.2.0
 ### Minor
 - Add *filter* support to `zap_directory`

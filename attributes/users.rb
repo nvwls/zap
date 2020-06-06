@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
+# Cookbook:: zap
 # Attributes:: users
 #
 # Author:: Sander Botman. <sbotman@schubergphilis.com>

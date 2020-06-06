@@ -8,96 +8,61 @@ transport:
 
 provisioner:
   name: dokken
-  deprecations_as_errors: true
+  deprecations_as_errors: false
 
 verifier:
   name: inspec
 
 platforms:
-- name: amazonlinux
-  driver:
-    image: dokken/amazonlinux
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN yum -y install cronie
+  - name: amazonlinux-2
+    driver:
+      image: dokken/amazonlinux-2
+      pid_one_command: /usr/lib/systemd/systemd
 
-- name: centos-6
-  driver:
-    image: centos:6
-    platform: rhel
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN yum -y install lsof which initscripts net-tools wget net-tools cronie
+  - name: debian-9
+    driver:
+      image: dokken/debian-9
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update
 
-- name: centos-7
-  driver:
-    image: centos:7
-    platform: rhel
-    pid_one_command: /usr/lib/systemd/systemd
-    intermediate_instructions:
-      - RUN yum -y install lsof which systemd-sysv initscripts wget net-tools cronie
+  - name: debian-10
+    driver:
+      image: dokken/debian-10
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update
 
-- name: debian-7
-  driver:
-    image: debian:7
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install lsb-release cron apt-transport-https -y
+  - name: centos-6
+    driver:
+      image: dokken/centos-6
+      pid_one_command: /sbin/init
 
-- name: debian-8
-  driver:
-    image: debian:8
-    pid_one_command: /bin/systemd
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install lsb-release cron apt-transport-https -y
+  - name: centos-7
+    driver:
+      image: dokken/centos-7
+      pid_one_command: /usr/lib/systemd/systemd
 
-suites:
-  - name: apt_repos
-    run_list:
-    - recipe[test::apt_repos]
-    includes: [
-      'debian-7',
-      'debian-8'
-    ]
-  - name: cron
-    run_list:
-    - recipe[test::cron]
-  - name: cron_d
-    run_list:
-    - recipe[test::cron_d]
-  - name: directory
-    run_list:
-    - recipe[test::directory]
-  - name: groups
-    run_list:
-    - recipe[test::groups]
-  - name: users
-    run_list:
-    - recipe[test::users]
-  - name: yum_repos
-    run_list:
-    - recipe[test::yum_repos]
-    includes: [
-      'amazonlinux',
-      'centos-6',
-      'centos-7'
-    ]
-  - name: iptables_d
-    run_list:
-    - recipe[test::iptables_d]
-    includes: [
-      'centos-6',
-      'centos-7'
-    ]
-  - name: sudoers_d
-    run_list:
-    - recipe[test::sudoers_d]
-  - name: init_d
-    run_list:
-    - recipe[test::init_d]
-    includes: [
-      'amazonlinux',
-      'centos-6'
-    ]
+  - name: centos-8
+    driver:
+      image: dokken/centos-8
+      pid_one_command: /usr/lib/systemd/systemd
+
+  - name: fedora-latest
+    driver:
+      image: dokken/fedora-latest
+      pid_one_command: /usr/lib/systemd/systemd
+
+  - name: ubuntu-16.04
+    driver:
+      image: dokken/ubuntu-16.04
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update
+
+  - name: ubuntu-18.04
+    driver:
+      image: dokken/ubuntu-18.04
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update

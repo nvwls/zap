@@ -1,10 +1,14 @@
+# frozen_string_literal: true
+
 #
-# Cookbook Name:: zap
+# Cookbook:: zap
 # HWRP:: groups
 #
 # Author:: Sander Botman. <sbotman@schubergphilis.com>
+# Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
 # Copyright:: 2014, Sander Botman.
+# Copyright:: 2017-2020, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,41 +23,48 @@
 # limitations under the License.
 #
 
-require 'etc'
-require_relative 'default.rb'
+require_relative 'default'
 
-# zap_groups '/etc/group'
+# chef
 class Chef
   # resource
-  class Resource::ZapGroups < Resource::Zap
-    def initialize(name, run_context = nil)
-      super
+  class Resource
+    # zap_groups '/etc/group'
+    class ZapGroups < Chef::Resource::Zap
+      provides :zap_groups
 
-      # Set the resource name and provider and default action
-      @action = :remove
-      @resource_name = :zap_groups
-      @supports << :filter
+      property :path, String, default: '/etc/group'
 
-      register :group
+      def initialize(name, run_context = nil)
+        super
 
-      collect do
-        all = []
+        @supports << :filter
 
-        IO.foreach(path) do |line|
-          g = Struct::Group.new(*line.chomp.split(':'))
-          g.gid = g.gid.to_i
-
-          next if node['zap']['groups']['keep'].include?(g.name)
-
-          all << g.name if @filter.call(g)
+        register :group do |r| # rubocop:disable Style/SymbolProc
+          r.group_name
         end
 
-        all
-      end
-    end
+        collect do
+          all = []
 
-    def path(arg = nil)
-      set_or_return(:path, arg, kind_of: String, default: '/etc/group')
+          IO.foreach(path) do |line|
+            g = Struct::Group.new(*line.chomp.split(':'))
+            g.gid = g.gid.to_i
+
+            next if node['zap']['groups']['keep'].include?(g.name)
+
+            all << g.name if @filter.call(g)
+          end
+
+          all
+        end
+
+        purge do |id|
+          build_resource(:group, id) do
+            action :remove
+          end
+        end
+      end
     end
   end
 end
