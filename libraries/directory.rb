@@ -83,7 +83,7 @@ class Chef
         all
       end
 
-      def purge(name, _)
+      def purge(name)
         if ::File.symlink?(name)
           build_resource(:link, name) do
             action :delete
