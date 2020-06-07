@@ -2,6 +2,10 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v2.1.0
+### Minor
+- Add *notifies* support
+
 v2.0.1
 ### Bugfix
 - Fix bug in zap_directory.purge

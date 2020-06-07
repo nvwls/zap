@@ -5,7 +5,7 @@ maintainer        'Joseph J. Nuspl Jr.'
 maintainer_email  'nuspl@nvwls.com'
 license           'Apache-2.0'
 description       'Provides HWRPs for creating authoritative resources'
-version           '2.0.1'
+version           '2.1.0'
 
 %w(amazon centos fedora oracle redhat scientific).each do |os|
   supports os

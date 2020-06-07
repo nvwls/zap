@@ -184,6 +184,8 @@ class Chef
             @run_context.resource_collection << r
           end
         end
+
+        @new_resource.updated_by_last_action(extraneous.any?)
       end
 
       def override_runlist?
