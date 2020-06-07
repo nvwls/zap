@@ -2,6 +2,9 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v2.1.3
+- Fix false-negative in cron tests
+
 v2.1.2
 ### Bugfix
 - Fix scoping issue in Chef::Provider::Zap#purge

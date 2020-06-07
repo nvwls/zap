@@ -1,17 +1,6 @@
 # frozen_string_literal: true
 
-file '/tmp/cron' do
-  content <<-CONTENT
-  # Chef Name: a
-  * * * * * echo a
-
-  # Chef Name: b
-  * * * * * echo b
-
-  # Chef Name: c
-  * * * * * echo c
-  CONTENT
-end
+cookbook_file '/tmp/cron'
 
 execute 'test prep' do
   command <<-COMMAND
