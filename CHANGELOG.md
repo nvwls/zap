@@ -2,6 +2,10 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v2.1.2
+### Bugfix
+- Fix scoping issue in Chef::Provider::Zap#purge
+
 v2.1.1
 ### Bugfix
 - Silence foodcritic warning

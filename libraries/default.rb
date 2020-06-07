@@ -201,9 +201,10 @@ class Chef
       end
 
       def purge(id)
-        type, = @klass.first
+        type = @klass.first[0]
+        meth = @new_resource.action
         build_resource(type, id) do
-          action @new_resource.action
+          action meth
         end
       end
     end
