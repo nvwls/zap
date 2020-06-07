@@ -185,7 +185,7 @@ class Chef
           end
         end
 
-        @new_resource.updated_by_last_action(extraneous.any?)
+        @new_resource.updated_by_last_action(extraneous.any?) # ~FC085
       end
 
       def override_runlist?
