@@ -135,15 +135,15 @@ class Chef
       end
 
       def action_delete
-        iterate(:delete)
+        iterate
       end
 
       def action_disable
-        iterate(:disable)
+        iterate
       end
 
       def action_remove
-        iterate(:remove)
+        iterate
       end
 
       private
@@ -155,37 +155,38 @@ class Chef
       # collect all existing resources
       # keep only those that match the specified pattern
       def existing
-        @collect
-          .call
-          .select { |name| ::File.fnmatch(@pattern, name) }
+        @existing ||= begin
+          @collect
+            .call
+            .select { |name| ::File.fnmatch(@pattern, name) }
+        end
       end
 
       def desired
-        @run_context
-          .resource_collection
-          .map { |r| @klass[r.resource_name].call(r) }
-          .reject(&:nil?)
+        @desired ||= begin
+          @run_context
+            .resource_collection
+            .map { |r| @klass[r.resource_name].call(r) }
+            .flatten
+            .reject(&:nil?)
+        end
       end
 
-      def iterate(act)
+      def extraneous
+        @extraneous ||= existing - desired
+      end
+
+      def iterate
         return if override_runlist?
         return unless @new_resource.delayed || @new_resource.immediately
+        return if extraneous.empty?
 
-        extraneous = existing - desired
-        extraneous.each do |name|
-          r = @purge.call(name)
-          r.cookbook_name = @new_resource.cookbook_name
-          r.recipe_name = @new_resource.recipe_name
-
-          Chef::Log.debug "#{@new_resource} zapping #{r}"
-          if @new_resource.immediately
-            r.run_action(act)
-          else
+        converge_by "#{@new_resource.resource_name} #{@new_resource.name}" do
+          extraneous.each do |id|
+            r = @purge.call(id)
             @run_context.resource_collection << r
           end
         end
-
-        @new_resource.updated_by_last_action(extraneous.any?) # ~FC085
       end
 
       def override_runlist?

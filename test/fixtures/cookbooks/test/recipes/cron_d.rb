@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+include_recipe 'zap::cron_d'
+
 execute 'test prep' do
   command <<-COMMAND
   mkdir -p /etc/cron.d
@@ -22,5 +24,3 @@ cron_d 'd' do
   command 'true'
   user    'daemon'
 end
-
-include_recipe 'zap::cron_d'

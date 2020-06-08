@@ -2,6 +2,9 @@ zap Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the zap cookbook.
 
+v2.2.0
+- Support *whyrun*
+
 v2.1.3
 - Fix false-negative in cron tests
 
