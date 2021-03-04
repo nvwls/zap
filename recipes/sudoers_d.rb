@@ -8,7 +8,7 @@
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2017-2020, Joseph J. Nuspl Jr.
+# Copyright:: 2017-2021, Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,11 +23,18 @@
 # limitations under the License.
 #
 
+if ENV['TEST_KITCHEN']
+  # Don't zap the vagrant sudoers file
+  sudo 'vagrant' do
+    action :nothing
+  end
+end
+
 zap_directory '/etc/sudoers.d' do
   pattern node['zap']['sudoers_d']['pattern']
 
   register :sudo do |r|
     # sudo_filename
-    "/etc/sudoers.d/#{r.name.tr('.~', '__')}"
+    "/etc/sudoers.d/#{r.name.gsub(/[\.~]/, '__')}"
   end
 end

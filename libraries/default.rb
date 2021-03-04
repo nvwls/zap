@@ -21,7 +21,7 @@
 # limitations under the License.
 #
 
-if defined?(ChefSpec) # rubocop:disable ChefModernize/DefinesChefSpecMatchers
+if defined?(ChefSpec) # rubocop:disable Chef/Modernize/DefinesChefSpecMatchers
   def call_zap_delete(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:zap, :delete, resource_name)
   end
@@ -53,14 +53,14 @@ class Chef
 
         # registered resource names
         @klass = {}
-        @klass.default = lambda { |_| nil }
+        @klass.default = lambda { |_| nil } # rubocop:disable Style/Lambda
 
         # supported features
         @supports = []
 
         @delayed = false
 
-        @filter = lambda { |_| true }
+        @filter = lambda { |_| true } # rubocop:disable Style/Lambda
 
         # Set the provider
         @provider = Provider::Zap
@@ -73,15 +73,15 @@ class Chef
         if !block.nil? && !@supports.include?(:filter)
           Chef::Log.warn "#{@resource_name} does not support filter"
         end
-        set_or_return(:filter, block, kind_of: Proc) # rubocop:disable ChefModernize/SetOrReturnInResources
+        set_or_return(:filter, block, kind_of: Proc) # rubocop:disable Chef/Modernize/SetOrReturnInResources
       end
 
       def collect(&block)
-        set_or_return(:collect, block, kind_of: Proc) # rubocop:disable ChefModernize/SetOrReturnInResources
+        set_or_return(:collect, block, kind_of: Proc) # rubocop:disable Chef/Modernize/SetOrReturnInResources
       end
 
       def purge(&block)
-        set_or_return(:purge, block, kind_of: Proc) # rubocop:disable ChefModernize/SetOrReturnInResources
+        set_or_return(:purge, block, kind_of: Proc) # rubocop:disable Chef/Modernize/SetOrReturnInResources
       end
 
       def delayed(arg = nil)
@@ -102,10 +102,10 @@ class Chef
           if block.nil?
             obj = Chef::ResourceResolver.resolve(name, node: @run_context.node).new('')
 
-            if obj.respond_to?(:path)
-              cb = lambda { |r| r.path }
+            if obj.respond_to?(:path) # rubocop:disable Style/ConditionalAssignment
+              cb = lambda { |r| r.path } # rubocop:disable Style/Lambda
             else
-              cb = lambda { |r| r.name }
+              cb = lambda { |r| r.name } # rubocop:disable Style/Lambda
             end
           end
 
@@ -129,7 +129,7 @@ class Chef
       end
 
       if Chef::VERSION.to_i < 13
-        def whyrun_supported? # rubocop:disable ChefModernize/WhyRunSupportedTrue
+        def whyrun_supported? # rubocop:disable Chef/Modernize/WhyRunSupportedTrue
           true
         end
       end

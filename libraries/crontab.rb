@@ -6,7 +6,7 @@
 #
 # Author:: Joseph J. Nuspl Jr. <nuspl@nvwls.com>
 #
-# Copyright:: 2014-2020 Joseph J. Nuspl Jr.
+# Copyright:: 2014-2021 Joseph J. Nuspl Jr.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 require_relative 'default'
 
-if defined?(ChefSpec) # rubocop:disable ChefModernize/DefinesChefSpecMatchers
+if defined?(ChefSpec) # rubocop:disable Chef/Modernize/DefinesChefSpecMatchers
   def call_zap_crontab(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:zap_crontab, :delete, resource_name)
   end
